@@ -1,4 +1,4 @@
-# Manager — Ecosystem Manager (Config / Deployment / Schema / Sanitizer)
+# Manager — Ecosystem Manager (Skill / Agent / Environment Lifecycle & Configuration)
 
 > Unified configuration, schema, sanitizer and deployment management center for the Airymax platform.
 > A leaf repository under the [Airymax ecosystem](https://atomgit.com/openairymax/ecosystem).
@@ -9,22 +9,17 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0+Apache--2.0-4a90d9)](LICENSE)
 [![Branch](https://img.shields.io/badge/branch-feature%2Fofficial--hubs--01-6f7b8e)](https://atomgit.com/openairymax/manager)
 
+**Repository:** `git@atomgit.com:openairymax/manager.git` · **Branch:** `feature/official-hubs-01`
+
 ---
 
-## Module Positioning
+## Overview
 
-`ecosystem/manager/` is the **unified configuration and lifecycle management center** of the Airymax AI Agent Runtime Platform. It owns the single source of truth for every configuration consumed by the AgentRT runtime, the build toolchain, and the surrounding observability stack.
+`ecosystem/manager/` is the **unified configuration and lifecycle management center** of the Airymax AI Agent Runtime Platform. It is the single source of truth for every configuration consumed by the AgentRT runtime, the build toolchain, the observability stack and the surrounding daemons. The repository owns three core management responsibilities — **skill management**, **agent management** and **environment management** — alongside schema validation, sanitizer suppressions, security policy and deployment templates.
 
-The repository is organized around four responsibilities:
+The repository is **schema-driven**: every YAML / JSON file is validated against a JSON Schema before it is allowed to take effect, and every change is captured in an auditable audit log. It maintains `skill/registry.yaml` (10 registered skills), `agent/registry.yaml` (12 registered agents with capabilities, dual-system models, RBAC permissions, cost profiles and trust metrics) and `environment/{development,staging,production}.yaml` overlays that are merged on top of the base `configs/agentrt.yaml` (v0.1.1).
 
-| Responsibility | Directory | Purpose |
-|----------------|-----------|---------|
-| **Sanitizer** | `sanitizer/` | ASan / LSan / Valgrind suppression files + input sanitization rules (XSS, SQLi, prompt injection, PII, …) |
-| **Schema** | `schema/` | 11 JSON Schema files (~272 validation rules) covering every configuration domain |
-| **Security** | `security/` | Security policies, RBAC permission rules, sandbox and audit configuration |
-| **Configs** | `configs/`, `kernel/`, `model/`, `environment/`, `deployment/`, `monitoring/`, … | Deployment configuration templates, environment overlays and runtime settings |
-
-It is **schema-driven**: every YAML / JSON file is validated against a JSON Schema before it is allowed to take effect, and every change is captured in an auditable audit log.
+Within the ecosystem layer, `manager/` sits at the foundation: it has **no upstream Airymax repository dependency** (it is the configuration root), and is consumed downstream by the AgentRT runtime, the build toolchain, the Cupolas security module, the `tool_d` daemon, CI/CD pipelines and operators. It is what makes every other ecosystem component reproducible, validated and auditable.
 
 ## Directory Structure
 
@@ -49,115 +44,88 @@ manager/
 ├── security/                          # Security policy & RBAC
 │   ├── policy.yaml                    # Default policy, sandbox, audit, intrusion detection
 │   └── permission_rules.yaml          # Fine-grained RBAC rules
-├── kernel/                            # Kernel configuration
-│   ├── kernel.yaml
-│   └── settings.yaml
-├── model/                             # LLM model configuration
-│   ├── model.yaml
-│   └── model.json
-├── logging/                           # Logging configuration
-│   └── manager.yaml
-├── agent/                             # Agent registry
-│   └── registry.yaml
-├── skill/                             # Skill registry
-│   └── registry.yaml
-├── service/                           # Daemon configuration
-│   └── tool_d/tool.yaml               # tool_d configuration
+├── kernel/                            # Kernel configuration (kernel.yaml, settings.yaml)
+├── model/                             # LLM model configuration (model.yaml, model.json)
+├── logging/                           # Logging configuration (manager.yaml)
+├── agent/                             # Agent registry (registry.yaml — 12 agents)
+├── skill/                             # Skill registry (registry.yaml — 10 skills)
+├── service/                           # Daemon configuration (tool_d/tool.yaml)
 ├── configs/                           # Deployment configuration templates
 │   ├── agentrt.yaml                   # Unified AgentRT runtime configuration (v0.1.1)
 │   └── env.example                    # Environment variable template
-├── environment/                       # Environment overlays
-│   ├── development.yaml
-│   ├── staging.yaml
-│   └── production.yaml
-├── deployment/                        # Deployment configuration
-│   ├── cupolas/environments.yaml      # Cupolas environment configuration
-│   ├── manager_management.yaml        # Manager self-management configuration
-│   └── example.yaml
-├── monitoring/                        # Observability configuration
-│   ├── alerts/cupolas-alerts.yml      # Cupolas alerting rules
-│   ├── dashboards/cupolas-dashboard.json
-│   └── otel-collector-manager.yaml    # OpenTelemetry Collector pipeline
-├── audit/                             # Audit log samples
-│   └── sample_audit_log.json
-├── tools/                             # Operations toolset
-│   ├── src/
-│   │   ├── config_diff.py             # Configuration diff
-│   │   ├── config_version_cleanup.py  # Version history cleanup
-│   │   ├── drift_detector.py          # Configuration drift detection
-│   │   ├── audit_log_generator.py     # Audit log generator
-│   │   └── schema_diff.py             # Schema diff
-│   └── base/                          # Shared utilities
-├── benchmark/                         # Performance benchmarks
-│   └── benchmark_manager.py
+├── environment/                       # Environment overlays (development / staging / production)
+├── deployment/                        # Deployment configuration (cupolas, manager_management, example)
+├── monitoring/                        # Observability (alerts, dashboards, otel-collector)
+├── audit/                             # Audit log samples (sample_audit_log.json)
+├── tools/                             # Operations toolset (drift_detector, config_diff, ...)
+├── benchmark/                         # Performance benchmarks (benchmark_manager.py)
 ├── tests/                             # Test suite
 ├── .github/workflows/ci.yml           # CI pipeline
 ├── .gitignore
 └── README.md                          # This file
 ```
 
-## Configuration Architecture
+## Core Components
 
-```
-+-------------------------------------------------------------------+
-|        Configuration sources (files / env vars / API)             |
-+-------------------------------------------------------------------+
-|                      Manager configuration engine                  |
-|  +-------------+   +-------------+   +-------------+              |
-|  | Base config |   | Environment |   |  Runtime    |              |
-|  | (infra)     |   | (env diff)  |   | (dynamic)   |              |
-|  +------+------|   +------+------+   +------+------+              |
-|         \____________|________|____________/                      |
-|                      v                                            |
-|  +-----------------------------------------------------------+    |
-|  |             Merged configuration (runtime effective)      |    |
-|  +-----------------------------------------------------------+    |
-|                      |                                            |
-|  +-----------------------------------------------------------+    |
-|  |       JSON Schema validation engine                       |    |
-|  |       11 schemas · ~272 validation rules                  |    |
-|  +-----------------------------------------------------------+    |
-+-------------------------------------------------------------------+
-|        Semantic validation  →  Audit log  →  Distribution         |
-+-------------------------------------------------------------------+
-```
+### 1. Skill Management (`skill/`)
 
-### Configuration Layers
+`skill/registry.yaml` is the authoritative registry of every skill available to the runtime. Each entry declares `skill_id`, version, `unit_type` (`file` / `shell` / `api` / `code` / `db` / `browser` / `tool`), required permissions, dependencies, compatibility (min/max AgentRT version, platforms), resource limits and rate limits. 10 builtin skills are registered: `filesystem_skill`, `shell_skill`, `http_skill`, `python_skill`, `javascript_skill`, `database_skill`, `browser_skill`, `git_skill`, `vector_search_skill`, `log_analysis_skill`. Validated against `schema/skill-registry.schema.json`.
+
+### 2. Agent Management (`agent/`)
+
+`agent/registry.yaml` registers 12 agents across roles (product_manager, architect, frontend, backend, tester, devops, security, data_engineer, coordinator, reviewer, analyst, plus a custom template). Each agent entry is a full contract: capabilities (with input/output JSON Schema, token estimates, success rate), a dual-system model configuration (System 1 for fast response, System 2 for deep reasoning), `required_permissions`, `cost_profile`, `trust_metrics` and `resource_limits`. Validated against `schema/agent-registry.schema.json`; contract paths point at `ecosystem/openlab/contrib/agents/*/contract.json`.
+
+### 3. Environment Management (`environment/`)
+
+Three overlay files — `development.yaml`, `staging.yaml`, `production.yaml` — provide per-environment overrides (log level, Redis address, session timeout, etc.) merged on top of the base configuration. A higher-priority layer overrides keys of the same name in lower-priority layers:
 
 | Layer | Priority | Description | Example |
 |-------|----------|-------------|---------|
-| **Base** | Low | Infrastructure configuration shared by all environments | Log paths, data dirs, default ports |
+| **Base** | Low | Infrastructure config shared by all environments | Log paths, data dirs, default ports |
 | **Environment** | Medium | Per-environment overrides (`development` / `staging` / `production`) | Log level, Redis address, session timeout |
-| **Runtime** | High | Runtime dynamic configuration, supports hot reload | Rate limit, feature flags, model parameters |
+| **Runtime** | High | Runtime dynamic config, supports hot reload | Rate limit, feature flags, model parameters |
 
-A higher-priority layer overrides keys of the same name in lower-priority layers.
+### 4. Schema Validation (`schema/`)
 
-## Upstream / Downstream Dependencies
+11 JSON Schema files (~272 validation rules) covering every configuration domain — kernel, model, security, sanitizer, logging, agent/skill registries, tool service, audit log and manager self-management. Every config file references its schema via the `_schema` key and is rejected unless it validates.
 
-### Upstream
+### 5. Sanitizer (`sanitizer/`)
 
-**None.** `manager/` is an independent configuration layer that does not depend on any other Airymax repository at runtime. It only consumes standard tooling:
+Two responsibilities: (a) build-time suppression files (`lsan-suppressions`, `valgrind-suppressions`) that silence known third-party false positives during AddressSanitizer / LeakSanitizer / Valgrind runs; (b) runtime input-sanitization rules (`sanitizer_rules.json`) covering 7 attack categories (XSS, SQL injection, prompt injection, PII, path traversal, command injection, SSRF). Co-owned with the Cupolas security module under a dual-responsibility model.
+
+### 6. Unified Runtime Config (`configs/agentrt.yaml`)
+
+The v0.1.1 unified AgentRT runtime configuration covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (providers: OpenAI / Anthropic / DeepSeek / Google / Ollama, cost-aware routing, cache), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
+
+### 7. Operations Toolset (`tools/`)
+
+`drift_detector.py` (baseline + drift detection with `--fail-on-drift` CI mode), `config_diff.py` (snapshot diffing), `config_version_cleanup.py` (version history pruning), `audit_log_generator.py` (sample audit entries) and `schema_diff.py` (schema evolution diffing).
+
+## Upstream Dependencies
+
+**None — `manager/` is the configuration root.** It does not depend on any other Airymax repository at runtime; it is the layer every other component reads from. It only consumes standard tooling:
 
 | Dependency | Purpose |
 |------------|---------|
-| Python ≥ 3.10 | Scripting runtime for tools and tests |
-| `jsonschema` | JSON Schema validation |
+| Python ≥ 3.10 | Scripting runtime for tools, benchmark and tests |
+| `jsonschema` | JSON Schema validation engine |
 | `PyYAML` | YAML configuration parsing |
 | `pytest` | Test framework |
 | Valgrind / LeakSanitizer / AddressSanitizer | Memory tooling driven by the suppression files |
 
-### Downstream
+## Downstream Consumers
 
 | Consumer | How it uses `manager/` |
 |----------|------------------------|
 | **AgentRT runtime** | Reads `configs/agentrt.yaml` and environment overlays at startup; loads `security/`, `kernel/`, `model/`, `logging/` settings at runtime |
 | **AgentRT build toolchain** | Uses `sanitizer/lsan-suppressions` and `sanitizer/valgrind-suppressions` at **build / test time** to silence known third-party false positives |
-| **Cupolas security module** | Owns the content responsibility for `sanitizer/` and `security/` (dual-responsibility model); consumes `security/policy.yaml` |
-| **tool_d daemon** | Reads `service/tool_d/tool.yaml` |
-| **CI / CD pipelines** | Runs `tools/drift_detector.py` and `tools/config_diff.py` for configuration validation gates |
+| **Cupolas security module** | Co-owns `sanitizer/` and `security/` content under the dual-responsibility model; consumes `security/policy.yaml` and `permission_rules.yaml` |
+| **tool_d daemon** | Reads `service/tool_d/tool.yaml` (validated by `tool-service.schema.json`) |
+| **Agent & skill registries** | Runtime resolves agents/skills from `agent/registry.yaml` and `skill/registry.yaml`; contract paths point into `ecosystem/openlab/contrib/` |
+| **CI / CD pipelines** | Run `tools/drift_detector.py` and `tools/config_diff.py` as configuration validation gates |
 | **Operators** | Use `deployment/` and `monitoring/` templates for production rollouts |
 
-## Usage
+## Usage / Quick Start
 
 ### Configuration validation
 
@@ -213,21 +181,22 @@ cp configs/env.example .env
 # edit .env, set AGENTOS_ENV=production
 ```
 
-## Schema Coverage
+## Build
 
-| Domain | Schema file | Config file |
-|--------|-------------|-------------|
-| Schema metadata | `_metadata.schema.json` | — |
-| Audit log | `config-audit-log.schema.json` | `audit/sample_audit_log.json` |
-| Kernel | `kernel-settings.schema.json` | `kernel/settings.yaml` |
-| Model | `model.schema.json` | `model/model.yaml` |
-| Security | `security-policy.schema.json` | `security/policy.yaml` |
-| Sanitizer | `sanitizer-rules.schema.json` | `sanitizer/sanitizer_rules.json` |
-| Logging | `logging.schema.json` | `logging/manager.yaml` |
-| Agent registry | `agent-registry.schema.json` | `agent/registry.yaml` |
-| Skill registry | `skill-registry.schema.json` | `skill/registry.yaml` |
-| Tool service | `tool-service.schema.json` | `service/tool_d/tool.yaml` |
-| Manager self-management | `config-management.schema.json` | `deployment/manager_management.yaml` |
+`manager/` ships Python tooling and tests rather than a compiled artifact. Install the runtime dependencies and run the test suite:
+
+```bash
+# Runtime dependencies for tooling / validation
+pip install jsonschema pyyaml pytest
+
+# Run the operations toolset test suite
+python -m pytest tests/ -v
+
+# Run the schema coverage / diff tools
+python tools/src/schema_diff.py --help
+```
+
+CI is defined in `.github/workflows/ci.yml` and runs schema validation, drift detection and the test suite on every push.
 
 ## Branch Strategy
 
@@ -237,4 +206,4 @@ This leaf repository is on the **`feature/official-hubs-01`** branch (active dev
 
 Dual-licensed under **AGPL v3 + Apache 2.0** (SPDX: `AGPL-3.0-or-later OR Apache-2.0`). See [LICENSE](LICENSE) for the full text.
 
-Copyright (c) 2025-2026 **SPHARX Ltd.** All Rights Reserved.
+Copyright (c) 2025-2026 SPHARX Ltd. All Rights Reserved.

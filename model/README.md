@@ -48,4 +48,4 @@ JSON 格式的模型配置，与 `model.yaml` 包含相同数据，供 C 守护�
 
 ---
 
-© 2026 SPHARX Ltd. All Rights Reserved.
+© 2025-2026 SPHARX Ltd. All Rights Reserved.
