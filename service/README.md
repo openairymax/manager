@@ -36,4 +36,4 @@ tool_d 守护进程的运行参数配置，定义工具服务的运行时行为�
 
 ---
 
-© 2026 SPHARX Ltd. All Rights Reserved.
+© 2025-2026 SPHARX Ltd. All Rights Reserved.

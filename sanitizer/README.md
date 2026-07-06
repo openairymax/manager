@@ -81,4 +81,4 @@ LSAN_OPTIONS=suppressions=sanitizer/lsan-suppressions ./build/agentos
 
 ---
 
-© 2026 SPHARX Ltd. All Rights Reserved.
+© 2025-2026 SPHARX Ltd. All Rights Reserved.

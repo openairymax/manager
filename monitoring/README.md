@@ -48,4 +48,4 @@ Cupolas 子系统的 Grafana 仪表盘配置，提供：
 
 ---
 
-© 2026 SPHARX Ltd. All Rights Reserved.
+© 2025-2026 SPHARX Ltd. All Rights Reserved.

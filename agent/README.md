@@ -58,4 +58,4 @@ Agent 注册表，每个 Agent 包含以下字段：
 
 ---
 
-© 2026 SPHARX Ltd. All Rights Reserved.
+© 2025-2026 SPHARX Ltd. All Rights Reserved.
