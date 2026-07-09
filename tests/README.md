@@ -5,7 +5,7 @@
 
 ## 概述
 
-`manager/tests/` 包含 Manager 模块的完整测试套件（计划中），涵盖配置语法校验、JSON Schema 验证、配置集成测试、审计日志验证和配置漂移检测器测试。测试套件遵循 ARCHITECTURAL_PRINCIPLES.md 的 **E-8 可测试性原则**，提供统一的测试运行器，支持选择性执行和详细报告输出。
+`manager/tests/` 包含 Manager 模块的完整测试套件（计划中），涵盖配置语法校验、JSON Schema 验证、配置集成测试、审计日志验证和配置漂移检测器测试。测试套件遵循 00-architectural-principles.md 的 **E-8 可测试性原则**，提供统一的测试运行器，支持选择性执行和详细报告输出。
 
 > **注意**：以下测试文件均为计划中，尚未实现。当前目录仅包含本 README 文件。
 
