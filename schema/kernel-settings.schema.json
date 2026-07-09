@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agentos.spharx.ai/schemas/kernel-settings-v1.schema.json",
   "title": "AgentRT Kernel Settings Schema",
-  "description": "Configuration schema for AgentRT microkernel core settings. Based on ARCHITECTURAL_PRINCIPLES.md and error_code_reference.md specifications.",
+  "description": "Configuration schema for AgentRT MicroCoreRT settings. Based on ARCHITECTURAL_PRINCIPLES.md and error_code_reference.md specifications.",
   "type": "object",
   "required": ["_config_version", "kernel"],
   "properties": {
