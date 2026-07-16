@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentos.spharx.ai/schemas/models-v1.schema.json",
+  "$id": "https://agentrt.spharx.ai/schemas/models-v1.schema.json",
   "title": "AgentRT Models Configuration Schema",
   "description": "Configuration schema for LLM model providers and settings",
   "type": "object",

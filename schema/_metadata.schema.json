@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentos.spharx.ai/schemas/_metadata.schema.json",
+  "$id": "https://agentrt.spharx.ai/schemas/_metadata.schema.json",
   "title": "AgentRT Configuration Metadata Schema",
   "description": "Common metadata properties for AgentRT configuration files. This schema defines the standard metadata attributes used across all configuration files.",
   "type": "object",

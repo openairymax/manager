@@ -247,5 +247,5 @@ sync:
   
   # Redis 配置
   redis:
-    key_prefix: "agentos:manager:"
+    key_prefix: "agentrt:manager:"
     ttl_sec: 3600

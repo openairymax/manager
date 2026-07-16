@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://agentos.spharx.com/schemas/manager-management.schema.json",
+  "$id": "https://agentrt.spharx.com/schemas/manager-management.schema.json",
   "title": "AgentRT Configuration Management Schema",
   "description": "Schema for AgentRT configuration management settings including hot reload, version control, rollback, validation, audit, encryption, import/export, and sync",
   "type": "object",
@@ -413,7 +413,7 @@
             "key_prefix": {
               "type": "string",
               "description": "Redis key prefix",
-              "examples": ["agentos:config:"]
+              "examples": ["agentrt:config:"]
             },
             "ttl_sec": {
               "type": "integer",

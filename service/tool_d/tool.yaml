@@ -61,7 +61,7 @@ tool_d:
     
     # Docker 配置（当 mode 为 docker 时）
     docker:
-      image: "agentos/tool-runner:latest"
+      image: "agentrt/tool-runner:latest"
       network: "none"
       read_only: true
       security_opt:

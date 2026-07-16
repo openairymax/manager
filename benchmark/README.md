@@ -127,7 +127,7 @@ benchmark.save_results("custom_report.json")
 | 组件 | 用途 |
 |------|------|
 | Python ≥ 3.10 | 运行环境 |
-| agentos.modules.* | 被测模块（可选，缺失时使用 Mock API） |
+| agentrt.modules.* | 被测模块（可选，缺失时使用 Mock API） |
 
 ---
 
