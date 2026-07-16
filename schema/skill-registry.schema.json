@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agentos.spharx.ai/schemas/skills-registry-v1.schema.json",
+  "$id": "https://agentrt.spharx.ai/schemas/skills-registry-v1.schema.json",
   "title": "AgentRT Skills Registry Schema",
   "description": "Configuration schema for Skill registration and metadata",
   "type": "object",

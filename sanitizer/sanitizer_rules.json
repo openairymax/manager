@@ -1,5 +1,5 @@
 {
-  "$schema": "https://agentos.spharx.ai/schemas/sanitizer-rules-v1.schema.json",
+  "$schema": "https://agentrt.spharx.ai/schemas/sanitizer-rules-v1.schema.json",
   "_config_version": "1.0.0",
   "_owner": {
     "module": "cupolas",

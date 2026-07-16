@@ -98,7 +98,7 @@ security:
     cache_ttl_seconds: 300
   audit:
     enabled: true
-    log_path: "/var/log/agentos/audit.log"
+    log_path: "/var/log/agentrt/audit.log"
 
 # ─── 多 Agent 配置 ───
 multi_agent:
@@ -134,7 +134,7 @@ hooks:
   enabled: true
   hook_dirs:
     - "/etc/agentrt/hooks.d/"
-    - "~/.agentos/hooks/"
+    - "~/.agentrt/hooks/"
   global_hooks:
     on_tool_call:
       - hook: "security_audit"
@@ -144,8 +144,8 @@ hooks:
 plugins:
   enabled: true
   plugin_dirs:
-    - "/usr/lib/agentos/plugins/"
-    - "~/.agentos/plugins/"
+    - "/usr/lib/agentrt/plugins/"
+    - "~/.agentrt/plugins/"
   auto_discover: true
 
 # ─── 可观测性配置 ───

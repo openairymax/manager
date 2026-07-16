@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://agentos.spharx.com/schemas/tool-service.schema.json",
+  "$id": "https://agentrt.spharx.com/schemas/tool-service.schema.json",
   "title": "AgentRT Tool Service Configuration Schema",
   "description": "Schema for Tool Daemon service configuration",
   "type": "object",

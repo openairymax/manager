@@ -43,7 +43,7 @@ security:
       audit: false
     
     - id: "file_write_tmp"
-      resource: "file:write:${AGENTRT_TEMP_DIR}/agentos/*"
+      resource: "file:write:${AGENTRT_TEMP_DIR}/agentrt/*"
       action: "write"
       effect: "allow"
       priority: 10
@@ -161,7 +161,7 @@ security:
       effect: "allow"
       priority: 10
     
-    - id: "env_read_agentos"
+    - id: "env_read_agentrt"
       resource: "env:read:AGENTRT_*"
       action: "read"
       effect: "allow"
@@ -252,7 +252,7 @@ security:
     
     # 容器镜像（当 isolation_type 为 container 时使用）
     container_image:
-      name: "agentos/runtime:latest"
+      name: "agentrt/runtime:latest"
       registry: "${CONTAINER_REGISTRY:-docker.io}"
       pull_policy: "if_not_present"
 
@@ -312,7 +312,7 @@ security:
     # 会话令牌配置
     token:
       algorithm: "HS256"
-      issuer: "agentos"
+      issuer: "agentrt"
       audience: "agentrt-api"
       expiry_sec: 3600
       refresh_expiry_sec: 86400

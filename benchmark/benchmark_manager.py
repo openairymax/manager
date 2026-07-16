@@ -24,10 +24,10 @@ from typing import Any, Callable, Dict, List, Optional
 
 # 尝试导入必要的模块，如果不存在则使用 mock
 try:
-    from agentos.modules.task.manager import TaskManager
-    from agentos.modules.session.manager import SessionManager
-    from agentos.modules.memory.manager import MemoryManager
-    from agentos.modules.skill.manager import SkillManager
+    from agentrt.modules.task.manager import TaskManager
+    from agentrt.modules.session.manager import SessionManager
+    from agentrt.modules.memory.manager import MemoryManager
+    from agentrt.modules.skill.manager import SkillManager
     MODULES_AVAILABLE = True
 except ImportError:
     MODULES_AVAILABLE = False
@@ -211,7 +211,7 @@ def create_mock_api():
 
 def benchmark_task_manager(benchmark: PerformanceBenchmark, iterations: int) -> None:
     """测试任务管理器性能"""
-    from agentos.modules.task.manager import TaskManager
+    from agentrt.modules.task.manager import TaskManager
 
     api = create_mock_api()
     manager = TaskManager(api)
@@ -240,7 +240,7 @@ def benchmark_task_manager(benchmark: PerformanceBenchmark, iterations: int) -> 
 
 def benchmark_session_manager(benchmark: PerformanceBenchmark, iterations: int) -> None:
     """测试会话管理器性能"""
-    from agentos.modules.session.manager import SessionManager
+    from agentrt.modules.session.manager import SessionManager
 
     api = create_mock_api()
     manager = SessionManager(api)
@@ -269,8 +269,8 @@ def benchmark_session_manager(benchmark: PerformanceBenchmark, iterations: int) 
 
 def benchmark_memory_manager(benchmark: PerformanceBenchmark, iterations: int) -> None:
     """测试记忆管理器性能"""
-    from agentos.modules.memory.manager import MemoryManager
-    from agentos.types.common import MemoryLayer
+    from agentrt.modules.memory.manager import MemoryManager
+    from agentrt.types.common import MemoryLayer
 
     api = create_mock_api()
     manager = MemoryManager(api)
@@ -299,7 +299,7 @@ def benchmark_memory_manager(benchmark: PerformanceBenchmark, iterations: int) -
 
 def benchmark_skill_manager(benchmark: PerformanceBenchmark, iterations: int) -> None:
     """测试技能管理器性能"""
-    from agentos.modules.skill.manager import SkillManager
+    from agentrt.modules.skill.manager import SkillManager
 
     api = create_mock_api()
     manager = SkillManager(api)

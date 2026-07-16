@@ -48,8 +48,8 @@ environments:
       memory_limit: "1Gi"
     
     endpoints:
-      api: "${CUPOLAS_API_URL:-https://staging.agentos.example.com/cupolas}"
-      metrics: "${CUPOLAS_METRICS_URL:-https://staging.agentos.example.com/agentrt/cupolas/metrics}"
+      api: "${CUPOLAS_API_URL:-https://staging.agentrt.example.com/cupolas}"
+      metrics: "${CUPOLAS_METRICS_URL:-https://staging.agentrt.example.com/agentrt/cupolas/metrics}"
     
     notifications:
       slack: true
@@ -84,8 +84,8 @@ environments:
       replicas: 3
     
     endpoints:
-      api: "${CUPOLAS_API_URL:-https://agentos.example.com/cupolas}"
-      metrics: "${CUPOLAS_METRICS_URL:-https://agentos.example.com/agentrt/cupolas/metrics}"
+      api: "${CUPOLAS_API_URL:-https://agentrt.example.com/cupolas}"
+      metrics: "${CUPOLAS_METRICS_URL:-https://agentrt.example.com/agentrt/cupolas/metrics}"
     
     notifications:
       slack: true

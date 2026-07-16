@@ -64,10 +64,10 @@ Valgrind 内存检测抑制规则，用于消除第三方库在 Valgrind 检测�
 
 ```bash
 # 运行 Valgrind 内存检测（使用抑制规则）
-valgrind --suppressions=sanitizer/valgrind-suppressions ./build/agentos
+valgrind --suppressions=sanitizer/valgrind-suppressions ./build/agentrt
 
 # 运行 LeakSanitizer（使用抑制规则）
-LSAN_OPTIONS=suppressions=sanitizer/lsan-suppressions ./build/agentos
+LSAN_OPTIONS=suppressions=sanitizer/lsan-suppressions ./build/agentrt
 ```
 
 ## 依赖关系
