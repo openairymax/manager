@@ -22,8 +22,10 @@ _schema: "schema/agent-registry.schema.json"
 
 # 注册表元数据
 _metadata:
-  last_updated: "2026-04-02T00:00:00Z"
+  last_updated: "2026-07-31T00:00:00Z"
   total_agents: 12
+  implemented_agents: 7
+  planned_agents: 5
   schema_version: "1.0.0"
 
 # =============================================================================
@@ -38,7 +40,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/product_manager/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/product_manager/contract.json"
     description: "负责产品规划、需求分析和项目协调的智能体"
 
     # =========================================================================
@@ -158,7 +160,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/architect/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/architect/contract.json"
     description: "负责系统架构设计和技术决策的智能体"
 
     capabilities:
@@ -238,7 +240,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/frontend/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/frontend/contract.json"
     description: "负责前端界面开发和用户体验优化的智能体"
 
     capabilities:
@@ -319,7 +321,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/backend/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/backend/contract.json"
     description: "负责后端服务开发和API设计的智能体"
 
     capabilities:
@@ -401,7 +403,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/tester/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/tester/contract.json"
     description: "负责测试用例编写和质量保证的智能体"
 
     capabilities:
@@ -482,7 +484,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/devops/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/devops/contract.json"
     description: "负责部署运维和基础设施管理的智能体"
 
     capabilities:
@@ -564,7 +566,7 @@ agents:
     source: "builtin"
     version: "1.0.0"
     enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/security/contract.json"
+    contract_path: "ecosystem/agents/airymax_agents/security/contract.json"
     description: "负责安全审计和漏洞检测的智能体"
 
     capabilities:
@@ -644,8 +646,9 @@ agents:
     role: "data_engineer"
     source: "builtin"
     version: "1.0.0"
-    enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/data_engineer/contract.json"
+    enabled: false
+    implementation_status: "planned"
+    # contract_path: TBD (planned)
     description: "负责数据处理和管道构建的智能体"
 
     capabilities:
@@ -725,8 +728,9 @@ agents:
     role: "coordinator"
     source: "builtin"
     version: "1.0.0"
-    enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/coordinator/contract.json"
+    enabled: false
+    implementation_status: "planned"
+    # contract_path: TBD (planned)
     description: "负责多Agent协调和任务分配的智能体"
 
     capabilities:
@@ -805,8 +809,9 @@ agents:
     role: "reviewer"
     source: "builtin"
     version: "1.0.0"
-    enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/reviewer/contract.json"
+    enabled: false
+    implementation_status: "planned"
+    # contract_path: TBD (planned)
     description: "负责代码审查和质量把控的智能体"
 
     capabilities:
@@ -884,8 +889,9 @@ agents:
     role: "analyst"
     source: "builtin"
     version: "1.0.0"
-    enabled: true
-    contract_path: "ecosystem/openlab/contrib/agents/analyst/contract.json"
+    enabled: false
+    implementation_status: "planned"
+    # contract_path: TBD (planned)
     description: "负责数据分析和洞察提取的智能体"
 
     capabilities:
@@ -966,7 +972,8 @@ agents:
     source: "custom"
     version: "1.0.0"
     enabled: false
-    contract_path: "ecosystem/openlab/contrib/agents/custom/contract.json"
+    implementation_status: "planned"
+    # contract_path: TBD (planned)
     description: "自定义Agent模板，可根据需要配置"
 
     capabilities:
