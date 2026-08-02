@@ -34,37 +34,20 @@ kernel:
     verbose: false
     retention_days: 30
 
-# ─── LLM 提供商配置 ───
+# ─── LLM 配置 ───
+# 模型清单与提供商唯一来源（SSoT）：ecosystem/manager/model/model.yaml（同源 model.json）
+#   - providers / models / global / routing（任务→模型映射）由 llm_d 经 -c <config> 加载
+#   - default_provider / default_model 定义于 model.yaml 的 global 段
+# 本段仅保留运行时策略；模型与策略分离，避免双源漂移。
 llm:
-  default_provider: "openai"
-  providers:
-    openai:
-      type: "openai"
-      api_key_env: "OPENAI_API_KEY"
-      base_url: "https://api.openai.com/v1"
-      models: ["gpt-4o", "gpt-4o-mini"]
-    anthropic:
-      type: "anthropic"
-      api_key_env: "ANTHROPIC_API_KEY"
-      models: ["claude-sonnet-4-20250514"]
-    deepseek:
-      type: "openai-compatible"
-      base_url: "https://api.deepseek.com/v1"
-      api_key_env: "DEEPSEEK_API_KEY"
-    google:
-      type: "google"
-      api_key_env: "GOOGLE_API_KEY"
-    local:
-      type: "ollama"
-      base_url: "http://localhost:11434"
-  routing:
-    strategy: "cost_aware"
-    fallback_chain: ["openai", "anthropic", "deepseek"]
-    cost_budget_daily_usd: 10.0
-  cache:
-    enabled: true
-    ttl_seconds: 3600
-    max_entries: 10000
+  runtime:
+    routing:
+      fallback_chain: ["openai", "anthropic", "deepseek"]
+      cost_budget_daily_usd: 10.0
+    cache:
+      enabled: true
+      ttl_seconds: 3600
+      max_entries: 10000
 
 # ─── 记忆系统配置 ───
 memory:

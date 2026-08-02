@@ -95,7 +95,9 @@ Two responsibilities: (a) build-time suppression files (`lsan-suppressions`, `va
 
 ### 6. Unified Runtime Config (`configs/agentrt.yaml`)
 
-The v0.1.1 unified AgentRT runtime configuration covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (providers: OpenAI / Anthropic / DeepSeek / Google / Ollama, cost-aware routing, cache), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
+The v0.1.1 unified AgentRT runtime configuration covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (runtime policy: cost-aware routing fallback chain, daily budget, cache; provider/model definitions consolidated to `model/model.yaml` as the single source), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
+
+> **LLM config SSoT (0.1.1 consolidation)**: the `llm` section in `agentrt.yaml` keeps only **runtime policy** (routing fallback_chain / cost_budget / cache); `providers` and `models` definitions live in [`model/model.yaml`](model/README.md) (kept in sync with `model.json`) as the **single source of truth**, loaded by `llm_d` via `-c <config>`. Model and policy are separated to avoid dual-source drift.
 
 ### 7. Operations Toolset (`tools/`)
 

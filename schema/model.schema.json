@@ -11,6 +11,39 @@
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
       "description": "Configuration file version"
     },
+    "_schema": {
+      "type": "string",
+      "description": "JSON Schema file reference"
+    },
+    "_owner": {
+      "type": "object",
+      "description": "Configuration ownership metadata (dual-responsibility model)",
+      "properties": {
+        "module": {"type": "string"},
+        "contact": {"type": "string"},
+        "path": {"type": "string"},
+        "description": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "providers": {
+      "type": "array",
+      "description": "LLM provider list, loaded by llm_d (svc_load_model_config_json)",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {"type": "string"},
+          "api_key_env": {"type": "string"},
+          "base_url": {"type": "string"},
+          "default_model": {"type": "string"},
+          "timeout_sec": {"type": "integer", "minimum": 1, "maximum": 600},
+          "max_retries": {"type": "integer", "minimum": 0, "maximum": 10},
+          "models": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
     "global": {
       "type": "object",
       "description": "Global model configuration defaults",

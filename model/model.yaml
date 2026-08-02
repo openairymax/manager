@@ -20,6 +20,51 @@ _config_version: "1.0.0"
 _schema: "schema/model.schema.json"
 
 # =============================================================================
+# 提供商配置（llm_d 经 providers 数组加载；模型详情见下方 models 列表）
+# 与 model.json 保持同源，修改须同步两份文件
+# =============================================================================
+providers:
+  - name: "openai"
+    api_key_env: "OPENAI_API_KEY"
+    base_url: "https://api.openai.com/v1"
+    default_model: "gpt-4-turbo"
+    timeout_sec: 60
+    max_retries: 3
+    models: ["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo", "text-embedding-3-small", "text-embedding-3-large"]
+
+  - name: "anthropic"
+    api_key_env: "ANTHROPIC_API_KEY"
+    base_url: "https://api.anthropic.com"
+    default_model: "claude-3-sonnet"
+    timeout_sec: 120
+    max_retries: 3
+    models: ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"]
+
+  - name: "deepseek"
+    api_key_env: "DEEPSEEK_API_KEY"
+    base_url: "https://api.deepseek.com"
+    default_model: "deepseek-chat"
+    timeout_sec: 120
+    max_retries: 3
+    models: ["deepseek-chat"]
+
+  - name: "google"
+    api_key_env: "GOOGLE_AI_API_KEY"
+    base_url: "https://generativelanguage.googleapis.com"
+    default_model: "gemini-pro"
+    timeout_sec: 60
+    max_retries: 3
+    models: ["gemini-pro", "gemini-pro-vision"]
+
+  - name: "local"
+    api_key_env: ""
+    base_url: "http://localhost:11434"
+    default_model: "llama-3-70b"
+    timeout_sec: 120
+    max_retries: 2
+    models: ["llama-3-70b"]
+
+# =============================================================================
 # 模型配置列表
 # =============================================================================
 models:
@@ -243,7 +288,7 @@ models:
     capabilities: ["chat", "function_calling", "streaming"]
     default: false
     max_concurrency: 20
-    timeout_sec: 60
+    timeout_sec: 120
     
     retry:
       max_attempts: 3
@@ -333,10 +378,10 @@ models:
 # =============================================================================
 global:
   # 默认提供商
-  default_provider: "openai"
+  default_provider: "deepseek"
   
   # 默认模型
-  default_model: "gpt-4-turbo"
+  default_model: "deepseek-chat"
   
   # 默认嵌入模型
   default_embedding_model: "text-embedding-3-small"
