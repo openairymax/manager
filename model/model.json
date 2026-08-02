@@ -39,7 +39,7 @@
             "api_key_env": "DEEPSEEK_API_KEY",
             "base_url": "https://api.deepseek.com",
             "default_model": "deepseek-chat",
-            "timeout_sec": 60,
+            "timeout_sec": 120,
             "max_retries": 3,
             "models": [
                 "deepseek-chat"
@@ -146,7 +146,7 @@
             "capabilities": ["chat", "function_calling", "streaming"],
             "default": false,
             "max_concurrency": 20,
-            "timeout_sec": 60
+            "timeout_sec": 120
         },
         {
             "name": "llama-3-70b",
@@ -184,8 +184,8 @@
     ],
 
     "global": {
-        "default_provider": "openai",
-        "default_model": "gpt-4-turbo",
+        "default_provider": "deepseek",
+        "default_model": "deepseek-chat",
         "default_embedding_model": "text-embedding-3-small",
         "default_timeout_sec": 60,
         "cache_capacity": 1024,

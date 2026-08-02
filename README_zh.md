@@ -95,7 +95,9 @@ manager/
 
 ### 6. 统一运行时配置（`configs/agentrt.yaml`）
 
-v0.1.1 的 AgentRT 统一运行时配置，覆盖：`kernel`（IPC、调度器、内存、定时器、错误）、`llm`（提供商：OpenAI / Anthropic / DeepSeek / Google / Ollama，成本感知路由、缓存）、`memory`（L1–L4 分层记忆）、`security`（Cupolas、沙箱、RBAC、审计）、`multi_agent`（A2A、协作模式、lanes）、`gateway`（HTTP、WebSocket、MCP、A2A、OpenAI 兼容）、`hooks`、`plugins` 与 `observability`（指标、链路追踪、日志、健康检查）。
+v0.1.1 的 AgentRT 统一运行时配置，覆盖：`kernel`（IPC、调度器、内存、定时器、错误）、`llm`（运行时策略：成本感知路由 fallback 链、日预算、缓存；提供商与模型定义收敛至 `model/model.yaml` 单一来源）、`memory`（L1–L4 分层记忆）、`security`（Cupolas、沙箱、RBAC、审计）、`multi_agent`（A2A、协作模式、lanes）、`gateway`（HTTP、WebSocket、MCP、A2A、OpenAI 兼容）、`hooks`、`plugins` 与 `observability`（指标、链路追踪、日志、健康检查）。
+
+> **LLM 配置 SSoT（0.1.1 收敛）**：`agentrt.yaml` 的 `llm` 段仅保留**运行时策略**（routing fallback_chain / cost_budget / cache）；`providers` 与 `models` 定义以 [`model/model.yaml`](model/README.md)（同源 `model.json`）为**唯一真相源**，由 `llm_d` 经 `-c <config>` 加载。模型与策略分离，避免双源漂移。
 
 ### 7. 运维工具集（`tools/`）
 
