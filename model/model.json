@@ -38,11 +38,11 @@
             "name": "deepseek",
             "api_key_env": "DEEPSEEK_API_KEY",
             "base_url": "https://api.deepseek.com",
-            "default_model": "deepseek-chat",
+            "default_model": "deepseek-v4-flash",
             "timeout_sec": 120,
             "max_retries": 3,
             "models": [
-                "deepseek-chat"
+                "deepseek-v4-flash"
             ]
         },
         {
@@ -138,7 +138,7 @@
             "timeout_sec": 30
         },
         {
-            "name": "deepseek-chat",
+            "name": "deepseek-v4-flash",
             "provider": "deepseek",
             "context_window": 64000,
             "input_cost_per_1k": 0.0001,
@@ -185,7 +185,7 @@
 
     "global": {
         "default_provider": "deepseek",
-        "default_model": "deepseek-chat",
+        "default_model": "deepseek-v4-flash",
         "default_embedding_model": "text-embedding-3-small",
         "default_timeout_sec": 60,
         "cache_capacity": 1024,
