@@ -43,10 +43,10 @@ providers:
   - name: "deepseek"
     api_key_env: "DEEPSEEK_API_KEY"
     base_url: "https://api.deepseek.com"
-    default_model: "deepseek-chat"
+    default_model: "deepseek-v4-flash"
     timeout_sec: 120
     max_retries: 3
-    models: ["deepseek-chat"]
+    models: ["deepseek-v4-flash"]
 
   - name: "google"
     api_key_env: "GOOGLE_AI_API_KEY"
@@ -278,7 +278,7 @@ models:
   # ===========================================================================
   # DeepSeek 模型
   # ===========================================================================
-  - name: "deepseek-chat"
+  - name: "deepseek-v4-flash"
     provider: "deepseek"
     api_key_env: "DEEPSEEK_API_KEY"
     endpoint: "https://api.deepseek.com/v1/chat/completions"
@@ -381,7 +381,7 @@ global:
   default_provider: "deepseek"
   
   # 默认模型
-  default_model: "deepseek-chat"
+  default_model: "deepseek-v4-flash"
   
   # 默认嵌入模型
   default_embedding_model: "text-embedding-3-small"
