@@ -1,6 +1,10 @@
 # agentrt.yaml — AgentRT 统一配置 (v0.1.1)
 # 所有子系统通过此文件统一配置
 # 环境变量覆盖优先级: AGENTRT_* 环境变量 > agentrt.yaml > 默认值
+#
+# 路径语义：${AIRY_HOME} 由 bootstrap/airy_paths_init() 展开，
+# 默认 $HOME/.airymaxrt（见 agentrt/commons/platform/platform.h）。
+# 禁止使用 /var/lib、/var/log、~/.agentrt 等遗留绝对路径（配置漂移铁律）。
 
 version: "0.1.1"
 
@@ -53,7 +57,7 @@ llm:
 memory:
   enabled: true
   mode: "full"
-  storage_path: "/var/lib/agentrt/memory"
+  storage_path: "${AIRY_HOME}/data/memory"
   layers:
     l1:
       compression: "zstd"
@@ -81,7 +85,7 @@ security:
     cache_ttl_seconds: 300
   audit:
     enabled: true
-    log_path: "/var/log/agentrt/audit.log"
+    log_path: "${AIRY_HOME}/logs/daemon_audit.log"
 
 # ─── 多 Agent 配置 ───
 multi_agent:
@@ -116,8 +120,8 @@ gateway:
 hooks:
   enabled: true
   hook_dirs:
-    - "/etc/agentrt/hooks.d/"
-    - "~/.agentrt/hooks/"
+    - "${AIRY_HOME}/config/hooks.d"
+    - "${AIRY_HOME}/lib/hooks.d"
   global_hooks:
     on_tool_call:
       - hook: "security_audit"
@@ -127,8 +131,8 @@ hooks:
 plugins:
   enabled: true
   plugin_dirs:
-    - "/usr/lib/agentrt/plugins/"
-    - "~/.agentrt/plugins/"
+    - "${AIRY_HOME}/lib/plugins"
+    - "${AIRY_HOME}/data/plugins"
   auto_discover: true
 
 # ─── 可观测性配置 ───
