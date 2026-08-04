@@ -1,7 +1,7 @@
 # Manager Schema — JSON Schema 定义
 
 **模块路径**: `ecosystem/manager/schema/`
-**版本**: v0.1.0
+**版本**: v0.1.1
 
 ## 概述
 

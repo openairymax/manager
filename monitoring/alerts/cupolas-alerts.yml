@@ -1,6 +1,6 @@
 # =============================================================================
 # AgentRT cupolas Module Monitoring Configuration
-# Version: 0.1.0
+# Version: 0.1.1
 # Description: Prometheus alerting rules and Grafana dashboard configuration
 # =============================================================================
 

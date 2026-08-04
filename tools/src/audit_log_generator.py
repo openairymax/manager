@@ -97,7 +97,7 @@ class Checksum:
 class Metadata:
     """元数据"""
     environment: str = "production"
-    version: str = "0.1.0"
+    version: str = "0.1.1"
     correlation_id: Optional[str] = None
     source: Optional[str] = None
     reason: Optional[str] = None

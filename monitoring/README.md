@@ -1,7 +1,7 @@
 # Manager Monitoring — 监控配置
 
 **模块路径**: `ecosystem/manager/monitoring/`
-**版本**: v0.1.0
+**版本**: v0.1.1
 
 ## 概述
 

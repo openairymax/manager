@@ -1,7 +1,7 @@
 # Manager Deployment — 部署环境配置
 
 **模块路径**: `ecosystem/manager/deployment/`
-**版本**: v0.1.0
+**版本**: v0.1.1
 
 ## 概述
 
