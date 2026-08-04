@@ -1,7 +1,7 @@
 # Manager Audit — 审计配置与示例
 
 **模块路径**: `ecosystem/manager/audit/`
-**版本**: v0.1.0
+**版本**: v0.1.1
 
 ## 概述
 

@@ -85,7 +85,7 @@ class TestMetadata:
         m = Metadata(environment="staging")
         d = m.to_dict()
         assert d["environment"] == "staging"
-        assert d["version"] == "0.1.0"
+        assert d["version"] == "0.1.1"
 
     def test_to_dict_full(self):
         m = Metadata(

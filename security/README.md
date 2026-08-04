@@ -1,7 +1,7 @@
 # Manager Security — 安全策略与权限配置
 
 **模块路径**: `ecosystem/manager/security/`
-**版本**: v0.1.0
+**版本**: v0.1.1
 
 ## 概述
 

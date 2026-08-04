@@ -1,7 +1,7 @@
 # Manager 测试套件
 
 **模块路径**: `ecosystem/manager/tests/`
-**版本**: v0.1.0
+**版本**: v0.1.1
 
 ## 概述
 
