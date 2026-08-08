@@ -123,7 +123,7 @@ The v0.1.1 unified AgentRT runtime configuration covering: `kernel` (IPC, schedu
 | **AgentRT build toolchain** | Uses `sanitizer/lsan-suppressions` and `sanitizer/valgrind-suppressions` at **build / test time** to silence known third-party false positives |
 | **Cupolas security module** | Co-owns `sanitizer/` and `security/` content under the dual-responsibility model; consumes `security/policy.yaml` and `permission_rules.yaml` |
 | **tool_d daemon** | Reads `service/tool_d/tool.yaml` (validated by `tool-service.schema.json`) |
-| **Agent & skill registries** | Runtime resolves agents/skills from `agent/registry.yaml` and `skill/registry.yaml`; contract paths point into `ecosystem/openlab/contrib/` |
+| **Agent & skill registries** | Runtime resolves agents/skills from `agent/registry.yaml` and `skill/registry.yaml`; agent contract paths point into `ecosystem/agents/airymax_agents/` |
 | **CI / CD pipelines** | Run `tools/drift_detector.py` and `tools/config_diff.py` as configuration validation gates |
 | **Operators** | Use `deployment/` and `monitoring/` templates for production rollouts |
 

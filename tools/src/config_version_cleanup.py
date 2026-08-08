@@ -184,11 +184,10 @@ class ConfigVersionCleanup:
                     # 压缩而不是删除
                     if not version.compressed and not self.dry_run:
                         try:
-                            compressed_path = gzip.compress(
-                                version.file_path.encode()
-                            )
-                            with open(version.file_path + '.gz', 'wb') as f:
-                                f.write(compressed_path)
+                            with open(version.file_path, "rb") as f:
+                                raw_bytes = f.read()
+                            with open(version.file_path + ".gz", "wb") as f:
+                                f.write(gzip.compress(raw_bytes))
                             os.remove(version.file_path)
 
                             self.log(f"  压缩: {version.version_id}")

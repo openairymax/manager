@@ -123,7 +123,7 @@ v0.1.1 的 AgentRT 统一运行时配置，覆盖：`kernel`（IPC、调度器�
 | **AgentRT 构建工具链** | **构建 / 测试期**使用 `sanitizer/lsan-suppressions` 与 `sanitizer/valgrind-suppressions` 抑制第三方库已知误报 |
 | **Cupolas 安全模块** | 按双重责任模型共有 `sanitizer/` 与 `security/` 内容；消费 `security/policy.yaml` 与 `permission_rules.yaml` |
 | **tool_d 守护进程** | 读取 `service/tool_d/tool.yaml`（由 `tool-service.schema.json` 校验） |
-| **Agent 与技能注册表** | 运行时从 `agent/registry.yaml` 与 `skill/registry.yaml` 解析；契约路径指向 `ecosystem/openlab/contrib/` |
+| **Agent 与技能注册表** | 运行时从 `agent/registry.yaml` 与 `skill/registry.yaml` 解析；Agent 契约路径指向 `ecosystem/agents/airymax_agents/` |
 | **CI / CD 流水线** | 运行 `tools/drift_detector.py` 与 `tools/config_diff.py` 作为配置校验门禁 |
 | **运维人员** | 使用 `deployment/` 与 `monitoring/` 模板进行生产部署 |
 
