@@ -24,8 +24,8 @@ _schema: "schema/agent-registry.schema.json"
 _metadata:
   last_updated: "2026-07-31T00:00:00Z"
   total_agents: 12
-  implemented_agents: 7
-  planned_agents: 5
+  implemented_agents: 10
+  planned_agents: 2
   schema_version: "1.0.0"
 
 # =============================================================================

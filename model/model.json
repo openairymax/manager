@@ -67,6 +67,81 @@
             "models": [
                 "llama-3-70b"
             ]
+        },
+        {
+            "name": "glm",
+            "api_key_env": "GLM_API_KEY",
+            "base_url": "https://open.bigmodel.cn/api/paas/v4",
+            "default_model": "glm-4-flash",
+            "timeout_sec": 120,
+            "max_retries": 3,
+            "models": [
+                "glm-4-flash",
+                "glm-4-air",
+                "glm-4-plus"
+            ]
+        },
+        {
+            "name": "qwen",
+            "api_key_env": "DASHSCOPE_API_KEY",
+            "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+            "default_model": "qwen-plus",
+            "timeout_sec": 120,
+            "max_retries": 3,
+            "models": [
+                "qwen-turbo",
+                "qwen-plus",
+                "qwen-max",
+                "qwen-long"
+            ]
+        },
+        {
+            "name": "moonshot",
+            "api_key_env": "MOONSHOT_API_KEY",
+            "base_url": "https://api.moonshot.cn/v1",
+            "default_model": "moonshot-v1-8k",
+            "timeout_sec": 120,
+            "max_retries": 3,
+            "models": [
+                "moonshot-v1-8k",
+                "moonshot-v1-32k",
+                "moonshot-v1-128k"
+            ]
+        },
+        {
+            "name": "siliconflow",
+            "api_key_env": "SILICONFLOW_API_KEY",
+            "base_url": "https://api.siliconflow.cn/v1",
+            "default_model": "Qwen/Qwen2.5-7B-Instruct",
+            "timeout_sec": 120,
+            "max_retries": 3,
+            "models": [
+                "Qwen/Qwen2.5-7B-Instruct",
+                "deepseek-ai/DeepSeek-V3"
+            ]
+        },
+        {
+            "name": "spark",
+            "api_key_env": "SPARK_API_KEY",
+            "base_url": "https://spark-api-open.xf-yun.com/v1",
+            "default_model": "generalv3.5",
+            "timeout_sec": 120,
+            "max_retries": 3,
+            "models": [
+                "generalv3.5",
+                "generalv3"
+            ]
+        },
+        {
+            "name": "custom",
+            "api_key_env": "CUSTOM_LLM_API_KEY",
+            "base_url": "https://your-endpoint.example.com/v1",
+            "default_model": "your-model",
+            "timeout_sec": 120,
+            "max_retries": 3,
+            "models": [
+                "your-model"
+            ]
         }
     ],
 
@@ -89,7 +164,7 @@
             "input_cost_per_1k": 0.01,
             "output_cost_per_1k": 0.03,
             "capabilities": ["chat", "function_calling", "json_mode", "vision", "streaming"],
-            "default": true,
+            "default": false,
             "max_concurrency": 20,
             "timeout_sec": 60
         },
