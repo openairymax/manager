@@ -1,16 +1,19 @@
+# =============================================================================
 # AgentRT Manager Module - Git Ignore Configuration
-# Version: 0.1.1
-# Purpose: Exclude temporary, cache and generated files from version control
-#
+# 版本: 0.1.1
+# 策略：非必要不追踪。仅忽略本地构建产物、缓存与运行时数据，
+#       源码与必要配置保持可追踪，避免误推远程仓库
 # Part of Airymax open-source project (agentrt)
+# =============================================================================
 
-# Python cache files
+# ---------- Python 缓存 ----------
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.pytest_cache/
 
-# Distribution / packaging
+# ---------- 打包与分发 ----------
 .Python
 build/
 develop-eggs/
@@ -32,11 +35,11 @@ wheels/
 *.manifest
 *.spec
 
-# Installer logs
+# Installer 日志
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# ---------- 测试与覆盖率 ----------
 htmlcov/
 .tox/
 .nox/
@@ -47,75 +50,41 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
-.pytest_cache/
+test-results/
+test_output/
 
-# Virtual environments
+# ---------- 虚拟环境 ----------
 .env
+.env.*
+!.env.example
 .venv
 env/
 venv/
 ENV/
 
-# IDE and editor files
+# ---------- IDE 与编辑器配置 ----------
 .idea/
 .vscode/
 .trae/
+*.code-workspace
 *.swp
 *.swo
 *~
-.DS_Store
-Thumbs.db
 
-# Project specific
+# ---------- 项目特有 ----------
 .baseline/
-*.log
-*.tmp
-*.bak
-
-# Generated reports (keep templates, ignore generated)
 drift_report.json
 drift_report.md
 audit_output_*.json
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# =============================================================================
-# v3.1 补全 — 以下条目于 2026-07-01 补充以统一全项目 .gitignore 标准（Airymax）
-# =============================================================================
-
-# IDE 配置补全
-*.code-workspace
-
-# 编译产物补全
-*.o
-*.a
-*.dll
-*.exe
-*.dylib
-
-# Rust 构建产物补全
-target/
-Cargo.lock
-
-# Go 测试二进制补全
-*.test
-
-# 编译输出补全
-*.out
-
-# 依赖目录补全
-node_modules/
-
-# 环境模板保留（例外规则）
-!.env.example
-
-# ===== 通用兜底（2026-08 统一更新） =====
-# 误放的大型运行时目录（JDK 等）与运行时产物
-oracleJdk-*/
-jdk-*/
+# ---------- 运行时数据 ----------
 *.log
 *.sock
-/run/
-/logs/
+*.db
+*.tmp
+*.bak
+
+# ---------- 操作系统文件 ----------
+.DS_Store
+Thumbs.db
+Desktop.ini
