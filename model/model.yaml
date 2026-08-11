@@ -1,10 +1,70 @@
 # =============================================================================
 # AgentRT 大语言模型配置文件
 # 版本: v1.0.0
-# 最后更新: 2026-04-01
+# 最后更新: 2026-08-10
 # Schema: schema/model.schema.json
 # =============================================================================
 # Copyright (c) 2026 SPHARX. All Rights Reserved. "From data intelligence emerges."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ★ 第零步：LLM 服务连接（简化配置）—— 普通用户只需配置本段 + secrets.env
+# ─────────────────────────────────────────────────────────────────────────────
+# 模型 API 只有两种协议格式，二选一：
+#   api_format: "openai"     → OpenAI Chat Completions
+#                              （DeepSeek / OpenAI / 智谱 / 通义 / Kimi / 本地 vLLM 等绝大多数厂商）
+#   api_format: "anthropic"  → Anthropic Messages（Claude 及 Anthropic 兼容服务）
+#
+# DeepSeek 官方 API 同时兼容两种格式（https://api-docs.deepseek.com）：
+#   OpenAI 兼容:     base_url = "https://api.deepseek.com"          （内部路径 /chat/completions）
+#   Anthropic 兼容:  base_url = "https://api.deepseek.com/anthropic"（内部路径 /messages）
+#
+# 只需填 4 项：
+#   api_format   协议格式（openai | anthropic，必填）
+#   base_url     服务根地址（不含 /chat/completions 或 /messages 后缀）
+#   api_key_env  secrets.env 中的变量名（启动后填 key 无需重启，llm_d 热加载）
+#   model        默认模型名（对话与双思考共用）
+#
+# 高级用户可删除本段，改用下方完整 providers/models 列表；
+# 本段存在时优先于完整列表（普通用户无需理解下方 400 行高级 schema）。
+llm:
+  api_format: "openai"                  # openai | anthropic
+  base_url: "https://api.deepseek.com"  # 服务根地址（厂商对照见注释）
+  api_key_env: "DEEPSEEK_API_KEY"       # secrets.env 变量名
+  model: "deepseek-v4-flash"            # 默认模型名
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ★ 第一步：双思考（Thinkdual）三模型配置 —— 启用后对话先经批判循环
+# ─────────────────────────────────────────────────────────────────────────────
+# 1、说明：
+#  - 双思考 = 慢思考 + 快思考 + 专业思考。对话（agent.run）会先经 think_d 走一遍
+# 2、介绍：
+#  - 批判循环，产出收敛的 DAG 行动计划，再交给 LLM 按计划回答。
+# 3、配置：
+#  - 三个思考角色各自独立配置模型（模型名须存在于上方 llm.model 或下方 models 列表）：
+#      think2_slow_model：慢思考（t2）生成行动计划                    （GRAD 模型 A）
+#      think1_fast_model：快思考（t1-f）对计划做终裁 accept/reject    （GRAD 模型 B）
+#      think1_prof_model：专业思考（t1-p）专家：校验依赖/资源/目标     （GRAD 模型 C）
+# 4、填写规则：
+#  - 留空 "" = 使用默认模型（llm.model，高级模式为 global.default_model），三个角色共用同一模型；
+#  - 填不同模型 = 三个角色分工。示例：
+#      think2_slow_model: "deepseek-v4-pro"     # 慢思考用最强的大模型
+#      think1_fast_model: "deepseek-v4-flash"   # 快思考用快速的小模型
+#      think1_prof_model: "opus-1.5b"           # 专业思考用特点强的模型
+# 5、开关：
+#  - enabled: true → 启用双思考（GRAD 批判循环）
+#  - enabled: false → 关闭双思考（GRAD 批判循环），退化为单轮普通计划。
+# 6、临时覆盖：
+#  - env 变量覆盖：env AIRY_THINK_ENABLED / AIRY_THINK2_SLOW_MODEL / AIRY_THINK1_FAST_MODEL / AIRY_THINK1_PROF_MODEL / AIRY_THINK_TIMEOUT_MS
+# 7、优先级：
+#  - env > model.yaml think 段 > think_d 的 -c JSON 配置 > 默认。
+
+# ★ Thinkdual配置
+think:
+  enabled: true              # true=启用双思考；false=关闭（退化为单轮计划）
+  think2_slow_model: ""      # 慢思考（t2）模型（空=默认模型）
+  think1_fast_model: ""      # 快思考（t1-f）模型（空=默认模型）
+  think1_prof_model: ""      # 专业思考（t1-p）模型（空=默认模型）
+  timeout_ms: 120000         # 单次双思考处理超时（毫秒）
 
 # 配置归属（按双重责任模型）
 _owner:
