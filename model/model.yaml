@@ -61,9 +61,9 @@ llm:
 # ★ Thinkdual配置
 think:
   enabled: true              # true=启用双思考；false=关闭（退化为单轮计划）
-  think2_slow_model: ""      # 慢思考（t2）模型（空=默认模型）
-  think1_fast_model: ""      # 快思考（t1-f）模型（空=默认模型）
-  think1_prof_model: ""      # 专业思考（t1-p）模型（空=默认模型）
+  think2_slow_model: "deepseek-v4-pro"      # 慢思考（t2）最强模型：行动计划质量决定任务执行成败
+  think1_fast_model: "deepseek-v4-flash"    # 快思考（t1-f）快速终裁
+  think1_prof_model: "deepseek-v4-flash"    # 专业思考（t1-p）默认模型
   timeout_ms: 120000         # 单次双思考处理超时（毫秒）
 
 # 配置归属（按双重责任模型）
@@ -106,7 +106,7 @@ providers:
     default_model: "deepseek-v4-flash"
     timeout_sec: 120
     max_retries: 3
-    models: ["deepseek-v4-flash"]
+    models: ["deepseek-v4-flash", "deepseek-v4-pro"]
 
   - name: "google"
     api_key_env: "GOOGLE_AI_API_KEY"
