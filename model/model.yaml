@@ -487,6 +487,217 @@ models:
     max_concurrency: 50
     timeout_sec: 30
 
+  # ===========================================================================
+  # 价格补齐（2026-08-23）：此前 models 段缺条目的模型统一落 cost_tracker
+  # 默认价（0.001/0.002 per 1k），deepseek-v4-pro（t2 慢思考默认模型）尤其
+  # 失真。以下价格以各厂商公开刊例折算 USD/1k tokens 填写，可按实际合同价
+  # 修改（SSoT：价格只定义在 models[].input/output_cost_per_1k）。
+  # ===========================================================================
+
+  - name: "deepseek-v4-pro"
+    provider: "deepseek"
+    api_key_env: "DEEPSEEK_API_KEY"
+    endpoint: "https://api.deepseek.com/v1/chat/completions"
+    context_window: 64000
+    input_cost_per_1k: 0.00027
+    output_cost_per_1k: 0.0011
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "glm-4-flash"
+    provider: "glm"
+    api_key_env: "GLM_API_KEY"
+    endpoint: "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+    context_window: 128000
+    input_cost_per_1k: 0.0
+    output_cost_per_1k: 0.0
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 50
+    timeout_sec: 120
+
+  - name: "glm-4-air"
+    provider: "glm"
+    api_key_env: "GLM_API_KEY"
+    endpoint: "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+    context_window: 128000
+    input_cost_per_1k: 0.00014
+    output_cost_per_1k: 0.00014
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 30
+    timeout_sec: 120
+
+  - name: "glm-4-plus"
+    provider: "glm"
+    api_key_env: "GLM_API_KEY"
+    endpoint: "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+    context_window: 128000
+    input_cost_per_1k: 0.014
+    output_cost_per_1k: 0.014
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 10
+    timeout_sec: 120
+
+  - name: "qwen-turbo"
+    provider: "qwen"
+    api_key_env: "DASHSCOPE_API_KEY"
+    endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    context_window: 1000000
+    input_cost_per_1k: 0.00004
+    output_cost_per_1k: 0.00008
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 50
+    timeout_sec: 120
+
+  - name: "qwen-plus"
+    provider: "qwen"
+    api_key_env: "DASHSCOPE_API_KEY"
+    endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    context_window: 1000000
+    input_cost_per_1k: 0.00011
+    output_cost_per_1k: 0.00028
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 30
+    timeout_sec: 120
+
+  - name: "qwen-max"
+    provider: "qwen"
+    api_key_env: "DASHSCOPE_API_KEY"
+    endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    context_window: 32000
+    input_cost_per_1k: 0.0028
+    output_cost_per_1k: 0.0084
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 10
+    timeout_sec: 120
+
+  - name: "qwen-long"
+    provider: "qwen"
+    api_key_env: "DASHSCOPE_API_KEY"
+    endpoint: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions"
+    context_window: 10000000
+    input_cost_per_1k: 0.00007
+    output_cost_per_1k: 0.00028
+    capabilities: ["chat", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "moonshot-v1-8k"
+    provider: "moonshot"
+    api_key_env: "MOONSHOT_API_KEY"
+    endpoint: "https://api.moonshot.cn/v1/chat/completions"
+    context_window: 8000
+    input_cost_per_1k: 0.0017
+    output_cost_per_1k: 0.0017
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "moonshot-v1-32k"
+    provider: "moonshot"
+    api_key_env: "MOONSHOT_API_KEY"
+    endpoint: "https://api.moonshot.cn/v1/chat/completions"
+    context_window: 32000
+    input_cost_per_1k: 0.0034
+    output_cost_per_1k: 0.0034
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "moonshot-v1-128k"
+    provider: "moonshot"
+    api_key_env: "MOONSHOT_API_KEY"
+    endpoint: "https://api.moonshot.cn/v1/chat/completions"
+    context_window: 128000
+    input_cost_per_1k: 0.0085
+    output_cost_per_1k: 0.0085
+    capabilities: ["chat", "function_calling", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "Qwen/Qwen2.5-7B-Instruct"
+    provider: "siliconflow"
+    api_key_env: "SILICONFLOW_API_KEY"
+    endpoint: "https://api.siliconflow.cn/v1/chat/completions"
+    context_window: 32768
+    input_cost_per_1k: 0.0002
+    output_cost_per_1k: 0.0002
+    capabilities: ["chat", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "deepseek-ai/DeepSeek-V3"
+    provider: "siliconflow"
+    api_key_env: "SILICONFLOW_API_KEY"
+    endpoint: "https://api.siliconflow.cn/v1/chat/completions"
+    context_window: 64000
+    input_cost_per_1k: 0.00027
+    output_cost_per_1k: 0.0011
+    capabilities: ["chat", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "generalv3.5"
+    provider: "spark"
+    api_key_env: "SPARK_API_KEY"
+    endpoint: "https://spark-api-open.xf-yun.com/v1/chat/completions"
+    context_window: 8192
+    input_cost_per_1k: 0.0021
+    output_cost_per_1k: 0.0021
+    capabilities: ["chat", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "generalv3"
+    provider: "spark"
+    api_key_env: "SPARK_API_KEY"
+    endpoint: "https://spark-api-open.xf-yun.com/v1/chat/completions"
+    context_window: 8192
+    input_cost_per_1k: 0.0017
+    output_cost_per_1k: 0.0017
+    capabilities: ["chat", "streaming"]
+    default: false
+    max_concurrency: 20
+    timeout_sec: 120
+
+  - name: "gemini-pro"
+    provider: "google"
+    api_key_env: "GOOGLE_AI_API_KEY"
+    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+    context_window: 32768
+    input_cost_per_1k: 0.00125
+    output_cost_per_1k: 0.00375
+    capabilities: ["chat", "streaming"]
+    default: false
+    max_concurrency: 10
+    timeout_sec: 120
+
+  - name: "gemini-pro-vision"
+    provider: "google"
+    api_key_env: "GOOGLE_AI_API_KEY"
+    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent"
+    context_window: 32768
+    input_cost_per_1k: 0.0025
+    output_cost_per_1k: 0.0075
+    capabilities: ["chat", "vision", "streaming"]
+    default: false
+    max_concurrency: 10
+    timeout_sec: 120
+
 # =============================================================================
 # 全局模型配置
 # =============================================================================
