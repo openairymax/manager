@@ -7,14 +7,14 @@
 # agentrt-bootstrap.sh / release.yml / package-full-release.sh 拷贝到
 # 运行环境 $AIRY_HOME/config/model.yaml，两侧内容保持一致。
 #
-# v3 表格形式：最多 3 个模型连接（与 secrets.env 的 MODEL_1/2/3_API_KEY
-# 一一对应）+ 双思考系统独立配置。字段统一抽象，不区分厂商：
-# 用户只需填 格式（OpenAI/Anthropic）、地址、模型名、key，即可接入任意
-# 厂商 API 或本地模型。旧 providers/global/routing 长清单已移除。
+# v3 表格形式：每行一个模型连接（数量不限，引擎上限 64）+ 双思考系统
+# 独立配置。字段统一抽象，不区分厂商：用户只需填 格式（OpenAI/Anthropic）、
+# 地址、模型名，即可接入任意厂商 API 或本地模型。
+# 旧 providers/global/routing 长清单已移除。
 # =============================================================================
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ★ 模型连接表（最多 3 个；每行一个模型，对应 secrets.env 一个 KEY 位）
+# ★ 模型连接表（每行一个模型；数量不限）
 # ─────────────────────────────────────────────────────────────────────────────
 # 必填字段：
 #   name          展示名称（自定义，如 "DeepSeek" / "本地模型"）
@@ -22,7 +22,22 @@
 #   api_format    openai（OpenAI Chat Completions）| anthropic（Anthropic Messages）
 #   base_url      服务根地址（完整 URL，不含 /chat/completions 或 /messages 后缀）
 #   model_id      模型 ID（实际调用时使用的模型名）
-#   api_key_env   secrets.env 中的变量名（本地模型留空）
+#   api_key_env   secrets.env 中的变量名（可省略/留空）：
+#                 - 缺省/留空时自动按表格行号映射 MODEL_<行号>_API_KEY
+#                   （第 1 行 → MODEL_1_API_KEY，第 2 行 → MODEL_2_API_KEY，…）
+#                 - 仅需自定义变量名时才显式填写
+#                 - local（本地模型）无需 key，可留空
+#
+# ★ 如何添加新模型（两步，不增加配置复杂度）：
+#   1) 在本表追加一行（name/mode/api_format/base_url/model_id）
+#   2) 在 secrets.env 追加一个 Key 位：MODEL_<新行号>_API_KEY=xxx
+#   示例（追加为第 4 行时）：
+#     - name: Qwen
+#       mode: api
+#       api_format: openai
+#       base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+#       model_id: qwen-max
+#     secrets.env 加一行：MODEL_4_API_KEY=sk-xxxx
 #
 # 高级配置（可选，缺省用默认值）：
 #   context_window   上下文窗口：128k|256k|512k|1M|2M（默认 128k）
