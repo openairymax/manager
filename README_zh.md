@@ -73,7 +73,7 @@ manager/
 
 ### 2. Agent 管理（`agent/`）
 
-`agent/registry.yaml` 注册了 12 个 Agent，覆盖多种角色（product_manager、architect、frontend、backend、tester、devops、security、data_engineer、coordinator、reviewer、analyst，以及自定义模板）。每个 Agent 条目是一份完整契约：能力（含输入/输出 JSON Schema、Token 估算、成功率）、双系统模型配置（System 1 快速响应、System 2 深度推理）、`required_permissions`、`cost_profile`、`trust_metrics` 与 `resource_limits`。由 `schema/agent-registry.schema.json` 校验，契约路径指向 `ecosystem/openlab/contrib/agents/*/contract.json`。
+`agent/registry.yaml` 注册了 12 个 Agent，覆盖多种角色（product_manager、architect、frontend、backend、tester、devops、security、data_engineer、coordinator、reviewer、analyst，以及自定义模板）。每个 Agent 条目是一份完整契约：能力（含输入/输出 JSON Schema、Token 估算、成功率）、双系统模型配置（System 1 快速响应、System 2 深度推理）、`required_permissions`、`cost_profile`、`trust_metrics` 与 `resource_limits`。由 `schema/agent-registry.schema.json` 校验，契约路径指向 `ecosystem/agents/airymax_agents/*/contract.json`。
 
 ### 3. 环境管理（`environment/`）
 
