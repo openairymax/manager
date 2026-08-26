@@ -1,291 +1,53 @@
 {
-    "_config_version": "1.0.0",
-    "_owner": {
-        "module": "llm_d",
-        "description": "JSON version of model.yaml for llm_d config loading"
+  "models": [
+    {
+      "name": "DeepSeek",
+      "mode": "api",
+      "api_format": "openai",
+      "base_url": "https://api.deepseek.com",
+      "model_id": "deepseek-chat",
+      "api_key_env": "MODEL_1_API_KEY",
+      "context_window": "128k",
+      "max_output": "16k",
+      "tool_rounds": 1000,
+      "vision": false,
+      "thinking": "auto"
     },
-
-    "providers": [
-        {
-            "name": "openai",
-            "api_key_env": "OPENAI_API_KEY",
-            "base_url": "https://api.openai.com/v1",
-            "default_model": "gpt-4-turbo",
-            "timeout_sec": 60,
-            "max_retries": 3,
-            "models": [
-                "gpt-4",
-                "gpt-4-turbo",
-                "gpt-3.5-turbo",
-                "text-embedding-3-small",
-                "text-embedding-3-large"
-            ]
-        },
-        {
-            "name": "anthropic",
-            "api_key_env": "ANTHROPIC_API_KEY",
-            "base_url": "https://api.anthropic.com",
-            "default_model": "claude-3-sonnet",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "claude-3-opus",
-                "claude-3-sonnet",
-                "claude-3-haiku"
-            ]
-        },
-        {
-            "name": "deepseek",
-            "api_key_env": "DEEPSEEK_API_KEY",
-            "base_url": "https://api.deepseek.com",
-            "default_model": "deepseek-v4-flash",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "deepseek-v4-flash"
-            ]
-        },
-        {
-            "name": "google",
-            "api_key_env": "GOOGLE_AI_API_KEY",
-            "base_url": "https://generativelanguage.googleapis.com",
-            "default_model": "gemini-pro",
-            "timeout_sec": 60,
-            "max_retries": 3,
-            "models": [
-                "gemini-pro",
-                "gemini-pro-vision"
-            ]
-        },
-        {
-            "name": "local",
-            "api_key_env": "",
-            "base_url": "http://localhost:11434",
-            "default_model": "llama-3-70b",
-            "timeout_sec": 120,
-            "max_retries": 2,
-            "models": [
-                "llama-3-70b"
-            ]
-        },
-        {
-            "name": "glm",
-            "api_key_env": "GLM_API_KEY",
-            "base_url": "https://open.bigmodel.cn/api/paas/v4",
-            "default_model": "glm-4-flash",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "glm-4-flash",
-                "glm-4-air",
-                "glm-4-plus"
-            ]
-        },
-        {
-            "name": "qwen",
-            "api_key_env": "DASHSCOPE_API_KEY",
-            "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-            "default_model": "qwen-plus",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "qwen-turbo",
-                "qwen-plus",
-                "qwen-max",
-                "qwen-long"
-            ]
-        },
-        {
-            "name": "moonshot",
-            "api_key_env": "MOONSHOT_API_KEY",
-            "base_url": "https://api.moonshot.cn/v1",
-            "default_model": "moonshot-v1-8k",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "moonshot-v1-8k",
-                "moonshot-v1-32k",
-                "moonshot-v1-128k"
-            ]
-        },
-        {
-            "name": "siliconflow",
-            "api_key_env": "SILICONFLOW_API_KEY",
-            "base_url": "https://api.siliconflow.cn/v1",
-            "default_model": "Qwen/Qwen2.5-7B-Instruct",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "Qwen/Qwen2.5-7B-Instruct",
-                "deepseek-ai/DeepSeek-V3"
-            ]
-        },
-        {
-            "name": "spark",
-            "api_key_env": "SPARK_API_KEY",
-            "base_url": "https://spark-api-open.xf-yun.com/v1",
-            "default_model": "generalv3.5",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "generalv3.5",
-                "generalv3"
-            ]
-        },
-        {
-            "name": "custom",
-            "api_key_env": "CUSTOM_LLM_API_KEY",
-            "base_url": "https://your-endpoint.example.com/v1",
-            "default_model": "your-model",
-            "timeout_sec": 120,
-            "max_retries": 3,
-            "models": [
-                "your-model"
-            ]
-        }
-    ],
-
-    "models": [
-        {
-            "name": "gpt-4",
-            "provider": "openai",
-            "context_window": 128000,
-            "input_cost_per_1k": 0.03,
-            "output_cost_per_1k": 0.06,
-            "capabilities": ["chat", "function_calling", "json_mode", "streaming"],
-            "default": false,
-            "max_concurrency": 10,
-            "timeout_sec": 60
-        },
-        {
-            "name": "gpt-4-turbo",
-            "provider": "openai",
-            "context_window": 128000,
-            "input_cost_per_1k": 0.01,
-            "output_cost_per_1k": 0.03,
-            "capabilities": ["chat", "function_calling", "json_mode", "vision", "streaming"],
-            "default": false,
-            "max_concurrency": 20,
-            "timeout_sec": 60
-        },
-        {
-            "name": "gpt-3.5-turbo",
-            "provider": "openai",
-            "context_window": 16000,
-            "input_cost_per_1k": 0.0015,
-            "output_cost_per_1k": 0.002,
-            "capabilities": ["chat", "function_calling", "streaming"],
-            "default": false,
-            "max_concurrency": 50,
-            "timeout_sec": 30
-        },
-        {
-            "name": "claude-3-opus",
-            "provider": "anthropic",
-            "context_window": 200000,
-            "input_cost_per_1k": 0.015,
-            "output_cost_per_1k": 0.075,
-            "capabilities": ["chat", "vision", "streaming"],
-            "default": false,
-            "max_concurrency": 10,
-            "timeout_sec": 120
-        },
-        {
-            "name": "claude-3-sonnet",
-            "provider": "anthropic",
-            "context_window": 200000,
-            "input_cost_per_1k": 0.003,
-            "output_cost_per_1k": 0.015,
-            "capabilities": ["chat", "streaming"],
-            "default": false,
-            "max_concurrency": 20,
-            "timeout_sec": 60
-        },
-        {
-            "name": "claude-3-haiku",
-            "provider": "anthropic",
-            "context_window": 200000,
-            "input_cost_per_1k": 0.00025,
-            "output_cost_per_1k": 0.00125,
-            "capabilities": ["chat", "streaming"],
-            "default": false,
-            "max_concurrency": 50,
-            "timeout_sec": 30
-        },
-        {
-            "name": "deepseek-v4-flash",
-            "provider": "deepseek",
-            "context_window": 64000,
-            "input_cost_per_1k": 0.0001,
-            "output_cost_per_1k": 0.0002,
-            "capabilities": ["chat", "function_calling", "streaming"],
-            "default": false,
-            "max_concurrency": 20,
-            "timeout_sec": 120
-        },
-        {
-            "name": "llama-3-70b",
-            "provider": "local",
-            "context_window": 8192,
-            "input_cost_per_1k": 0.0,
-            "output_cost_per_1k": 0.0,
-            "capabilities": ["chat", "streaming"],
-            "default": false,
-            "max_concurrency": 5,
-            "timeout_sec": 120
-        },
-        {
-            "name": "text-embedding-3-small",
-            "provider": "openai",
-            "context_window": 8191,
-            "input_cost_per_1k": 0.00002,
-            "output_cost_per_1k": 0.0,
-            "capabilities": ["embedding"],
-            "default": false,
-            "max_concurrency": 100,
-            "timeout_sec": 30
-        },
-        {
-            "name": "text-embedding-3-large",
-            "provider": "openai",
-            "context_window": 8191,
-            "input_cost_per_1k": 0.00013,
-            "output_cost_per_1k": 0.0,
-            "capabilities": ["embedding"],
-            "default": false,
-            "max_concurrency": 50,
-            "timeout_sec": 30
-        }
-    ],
-
-    "global": {
-        "default_provider": "deepseek",
-        "default_model": "deepseek-v4-flash",
-        "default_embedding_model": "text-embedding-3-small",
-        "default_timeout_sec": 60,
-        "cache_capacity": 1024,
-        "cache_ttl_sec": 3600,
-        "max_retries": 3,
-        "timeout_ms": 30000
+    {
+      "name": "GLM",
+      "mode": "api",
+      "api_format": "openai",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "model_id": "GLM-4.7-Flash",
+      "api_key_env": "MODEL_2_API_KEY",
+      "context_window": "128k",
+      "max_output": "16k",
+      "tool_rounds": 1000,
+      "vision": false,
+      "thinking": "auto"
     },
-
-    "routing": {
-        "task_type_mapping": {
-            "planning": "gpt-4",
-            "coding": "gpt-4-turbo",
-            "analysis": "claude-3-opus",
-            "chat": "gpt-3.5-turbo",
-            "embedding": "text-embedding-3-small"
-        },
-        "complexity_mapping": {
-            "high": "gpt-4",
-            "medium": "gpt-4-turbo",
-            "low": "gpt-3.5-turbo"
-        },
-        "cost_optimization": {
-            "enabled": true,
-            "prefer_cheaper": false,
-            "max_cost_per_request": 1.0
-        }
+    {
+      "name": "本地模型",
+      "mode": "local",
+      "api_format": "openai",
+      "base_url": "http://localhost:11434/v1",
+      "model_id": "llama-3-8b",
+      "api_key_env": "",
+      "context_window": "128k",
+      "max_output": "16k",
+      "tool_rounds": 1000,
+      "vision": false,
+      "thinking": "auto",
+      "input_cost_per_1k": 0.0,
+      "output_cost_per_1k": 0.0
     }
+  ],
+  "default_model": "deepseek-chat",
+  "think": {
+    "enabled": true,
+    "think2_slow_model": "",
+    "think1_fast_model": "",
+    "think1_prof_model": "",
+    "timeout_ms": 120000
+  }
 }

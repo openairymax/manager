@@ -1,59 +1,78 @@
 # =============================================================================
-# AgentRT 大语言模型配置文件
-# 版本: v2.0.0 | 最后更新: 2026-08-26
+# AgentRT 大语言模型配置文件（v3.0.0 | 最后更新: 2026-08-26）
 # =============================================================================
 # Copyright (c) 2026 SPHARX. All Rights Reserved. "From data intelligence emerges."
 #
-# v2 表格形式：最多 3 个模型连接（与 secrets.env 的 MODEL_1/2/3_API_KEY
-# 一一对应）+ 双思考系统独立配置。旧的 providers/models/global/routing 长
-# 清单已移除（llm_d 的 llm-wins 规则下它们从未生效）。
+# 本文件是 AgentRT LLM 配置的唯一权威源（SSoT）。安装/构建时由
+# agentrt-bootstrap.sh / release.yml / package-full-release.sh 拷贝到
+# 运行环境 $AIRY_HOME/config/model.yaml，两侧内容保持一致。
+#
+# v3 表格形式：最多 3 个模型连接（与 secrets.env 的 MODEL_1/2/3_API_KEY
+# 一一对应）+ 双思考系统独立配置。字段统一抽象，不区分厂商：
+# 用户只需填 格式（OpenAI/Anthropic）、地址、模型名、key，即可接入任意
+# 厂商 API 或本地模型。旧 providers/global/routing 长清单已移除。
 # =============================================================================
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ★ 模型连接表（最多 3 个；表格形式，每行一个模型）
+# ★ 模型连接表（最多 3 个；每行一个模型，对应 secrets.env 一个 KEY 位）
 # ─────────────────────────────────────────────────────────────────────────────
-# 字段说明：
-#   name           展示名称（自定义，如 "DeepSeek" / "本地模型"）
-#   mode           api（云端 API）| local（本地模型）
-#   api_format     openai（OpenAI Chat Completions）| anthropic（Anthropic Messages）
-#   base_url       完整请求地址（不含 /chat/completions 或 /messages 后缀）
-#   model_id       模型 ID（实际调用时使用的模型名，也是展示名称）
-#   api_key_env    secrets.env 中的变量名（本地模型留空）
+# 必填字段：
+#   name          展示名称（自定义，如 "DeepSeek" / "本地模型"）
+#   mode          api（云端 API）| local（本地模型）
+#   api_format    openai（OpenAI Chat Completions）| anthropic（Anthropic Messages）
+#   base_url      服务根地址（完整 URL，不含 /chat/completions 或 /messages 后缀）
+#   model_id      模型 ID（实际调用时使用的模型名）
+#   api_key_env   secrets.env 中的变量名（本地模型留空）
 #
-#   高级配置（可选，缺省用默认值）：
+# 高级配置（可选，缺省用默认值）：
 #   context_window   上下文窗口：128k|256k|512k|1M|2M（默认 128k）
 #   max_output       最大输出 token：4k|16k|32k|128k|256k（默认 16k）
 #   tool_rounds      工具调用轮数（默认 1000）
 #   vision           图片输入：true|false（默认 false）
 #   thinking         思考模式：auto（跟随模型默认）|on|off（默认 auto）
-#   input_cost_per_1k   输入价格（美元/千 token，可选；缺失落默认价）
-#   output_cost_per_1k  输出价格（美元/千 token，可选；缺失落默认价）
+#   input_cost_per_1k   输入单价（美元/千 token，可选；缺失落默认价）
+#   output_cost_per_1k  输出单价（美元/千 token，可选；缺失落默认价）
 models:
-  - name: "DeepSeek"
-    mode: "api"
-    api_format: "openai"
-    base_url: "https://api.deepseek.com"
-    model_id: "deepseek-v4-flash"
-    api_key_env: "MODEL_1_API_KEY"
+  - name: DeepSeek
+    mode: api
+    api_format: openai
+    base_url: https://api.deepseek.com
+    model_id: deepseek-chat
+    api_key_env: MODEL_1_API_KEY
+    context_window: 128k
+    max_output: 16k
+    tool_rounds: 1000
+    vision: false
+    thinking: auto
 
-  - name: "GLM"
-    mode: "api"
-    api_format: "openai"
-    base_url: "https://open.bigmodel.cn/api/paas/v4"
-    model_id: "GLM-4.7-Flash"
-    api_key_env: "MODEL_2_API_KEY"
+  - name: GLM
+    mode: api
+    api_format: openai
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    model_id: GLM-4.7-Flash
+    api_key_env: MODEL_2_API_KEY
+    context_window: 128k
+    max_output: 16k
+    tool_rounds: 1000
+    vision: false
+    thinking: auto
 
-  - name: "本地模型"
-    mode: "local"
-    api_format: "openai"
-    base_url: "http://localhost:11434/v1"
-    model_id: "llama-3-8b"
+  - name: 本地模型
+    mode: local
+    api_format: openai
+    base_url: http://localhost:11434/v1
+    model_id: llama-3-8b
     api_key_env: ""
+    context_window: 128k
+    max_output: 16k
+    tool_rounds: 1000
+    vision: false
+    thinking: auto
     input_cost_per_1k: 0.0       # 免费模型显式 0，不落默认价
     output_cost_per_1k: 0.0
 
-# ── 默认模型（缺省 = models 表第一个条目的 model_id）─────────────────────
-default_model: "deepseek-v4-flash"
+# ── 默认模型（必填，须为上方 models 表中某一行的 model_id）───────────────
+default_model: deepseek-chat
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ★ 双思考系统（Thinkdual / GRAD 批判循环）
@@ -62,18 +81,20 @@ default_model: "deepseek-v4-flash"
 #  - enabled: true  → 对话先经批判循环（GRAD）产出收敛的 DAG 行动计划，
 #    再交 LLM 按计划回答（慢思考组织逻辑、快/专业思考校验终裁）。
 #  - enabled: false → 关闭双思考，退化为单轮普通计划。
-#  - 三个思考角色模型名须存在于上方 models 表（或为该表 model_id）：
-#      think2_slow_model：慢思考（t2）生成行动计划         （GRAD 模型 A）
-#      think1_fast_model：快思考（t1-f）对计划终裁         （GRAD 模型 B）
-#      think1_prof_model：专业思考（t1-p）专家校验         （GRAD 模型 C）
-#  - 角色模型留空 "" = 使用默认模型（default_model），三个角色共用。
+#  - 三个思考角色模型：填上方 models 表中的 model_id；留空 "" = 默认模型
+#    （default_model），三个角色共用。
+#      think2_slow_model  慢思考（t2）生成行动计划        （GRAD 模型 A）
+#      think1_fast_model  快思考（t1-f）对计划终裁        （GRAD 模型 B）
+#      think1_prof_model  专业思考（t1-p）专家校验        （GRAD 模型 C）
 #  - 临时覆盖（env 优先级最高）：
 #      AIRY_THINK_ENABLED / AIRY_THINK2_SLOW_MODEL /
 #      AIRY_THINK1_FAST_MODEL / AIRY_THINK1_PROF_MODEL / AIRY_THINK_TIMEOUT_MS
 #  - 优先级：env > 本段 > think_d -c JSON 配置 > 默认。
 think:
-  enabled: true               # true=启用双思考；false=关闭
-  think2_slow_model: "deepseek-v4-pro"      # 慢思考（t2）最强模型
-  think1_fast_model: "deepseek-v4-flash"    # 快思考（t1-f）快速终裁
-  think1_prof_model: ""                      # 专业思考（t1-p）留空=默认模型
-  timeout_ms: 120000          # 单次双思考处理超时（毫秒）
+  enabled: true
+  think2_slow_model: ""
+  think1_fast_model: ""
+  think1_prof_model: ""
+  timeout_ms: 120000
+  
+# ─────────────────────────────────────────────────────────────────────────────

@@ -345,11 +345,27 @@ def _load_model_config() -> Tuple[Dict[str, Any], str]:
 
 
 def model_providers(config: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """提取 providers 列表（兼容 dict / list 两种形态）。"""
+    """提取 providers 列表（兼容旧 providers 段与 v2/v3 models 表格两种形态）。"""
     providers = config.get("providers", [])
     if isinstance(providers, dict):
-        return list(providers.values())
-    return list(providers) if isinstance(providers, list) else []
+        providers = list(providers.values())
+    elif not isinstance(providers, list):
+        providers = []
+    # v2/v3：models 表格（每行一个模型连接，model_id 即默认模型名）
+    models = config.get("models", [])
+    if isinstance(models, list):
+        for m in models:
+            if not isinstance(m, dict):
+                continue
+            providers.append(
+                {
+                    "name": m.get("name", "-"),
+                    "base_url": m.get("base_url", ""),
+                    "default_model": m.get("model_id", ""),
+                    "api_key_env": m.get("api_key_env", ""),
+                }
+            )
+    return providers
 
 
 # ─────────────────────────────────────────────────────────────
