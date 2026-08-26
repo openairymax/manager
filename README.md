@@ -155,7 +155,7 @@ python tools/src/drift_detector.py --action detect --fail-on-drift
 python tools/src/config_diff.py config_v1.json config_v2.json
 
 # Clean up version history (keep the 10 most recent)
-python tools/src/config_version_cleanup.py --keep 10
+python tools/src/config_version_cleanup.py --max-versions 10
 
 # Generate sample audit log entries
 python tools/src/audit_log_generator.py --count 10 --output audit.json

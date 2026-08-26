@@ -5,7 +5,7 @@
 
 ## 概述
 
-`manager/tools/` 包含 Manager 模块的配置管理和运维工具集，提供配置差异对比、版本历史清理、配置漂移检测和审计日志生成四大工具。所有工具均支持 CLI 和 Python API 两种调用方式，可独立运行也可集成到 CI/CD 流水线中。
+`manager/tools/` 包含 Manager 模块的配置管理和运维工具集，提供配置差异对比、版本历史清理、配置漂移检测、审计日志生成和 Schema 差异比对五大工具。所有工具均支持 CLI 和 Python API 两种调用方式，可独立运行也可集成到 CI/CD 流水线中。
 
 ## 目录结构
 
@@ -15,10 +15,11 @@ tools/
 │   ├── config_diff.py          # 配置差异对比工具
 │   ├── config_version_cleanup.py   # 版本历史清理工具
 │   ├── drift_detector.py       # 配置漂移检测器
-│   └── audit_log_generator.py  # 审计日志生成器
+│   ├── audit_log_generator.py  # 审计日志生成器
+│   └── schema_diff.py          # Schema ↔ agentrt.yaml 差异比对工具
 ├── base/                       # 工具基础库
 │   ├── __init__.py             # 包初始化
-│   └── utils.py                # 公共工具函数
+│   └── utils.py                # 公共工具函数（ConfigLoader / ReportExporter / FileHelper）
 └── README.md                   # 本文件
 ```
 
@@ -48,10 +49,10 @@ python config_diff.py config_v1.json config_v2.json
 
 ```bash
 # 保留最近 10 个版本
-python config_version_cleanup.py --keep 10
+python config_version_cleanup.py --max-versions 10
 
 # 清理 30 天前的版本
-python config_version_cleanup.py --older-than 30
+python config_version_cleanup.py --days 30
 
 # 预览清理结果（不实际执行）
 python config_version_cleanup.py --dry-run
@@ -204,6 +205,34 @@ entries = generator.generate_batch(count=20, environment="staging")
 generator.export_to_json(entries, Path("audit_log.json"))
 ```
 
+### 5. Schema 差异比对 (`schema_diff.py`)
+
+比对 Manager 的 11 个 Schema 文件与 `agentrt.yaml`，检测字段不一致、Schema 漂移与缺失配置（P1.15 Manager Schema ↔ agentrt.yaml 双向同步）。
+
+```bash
+# 生成差异报告（默认文本输出）
+python schema_diff.py
+
+# 一致性检查（存在漂移时返回非零退出码，CI 友好）
+python schema_diff.py --check
+
+# CI 兼容的 JSON 输出
+python schema_diff.py --json
+```
+
+**退出码**：`0` = 全部 Schema 一致；`1` = 检测到漂移；`2` = 运行时错误。
+
+**Python API**：
+
+```python
+from schema_diff import SchemaDiffer, DiffReport
+
+differ = SchemaDiffer()
+report: DiffReport = differ.run()
+print(report.summary)
+print(f"Has errors: {report.has_errors()}")
+```
+
 ## CI/CD 集成
 
 ### GitLab CI 示例
@@ -214,7 +243,7 @@ config-validation:
   script:
     - python manager/tools/config_diff.py config.json config.new.json
     - python manager/tools/drift_detector.py --action detect --fail-on-drift
-    - python manager/tests/run_all_tests.py --verbose
+    - python -m pytest manager/tests/ -v
 ```
 
 ### GitHub Actions 示例

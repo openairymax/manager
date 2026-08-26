@@ -5,7 +5,7 @@
 
 ## 概述
 
-`manager/monitoring/` 包含 AgentRT Manager 模块的监控配置，提供 Cupolas 子系统的告警规则和 Grafana 可视化仪表盘，用于实时监控系统运行状态和异常告警。
+`manager/monitoring/` 包含 AgentRT Manager 模块的监控配置，提供 Cupolas 子系统的 CI/CD 质量门禁告警规则、Grafana 可视化仪表盘以及 OpenTelemetry Collector 采集配置，用于在构建 / 测试 / 发布流水线中实时监控质量与安全状态。
 
 ## 目录结构
 
@@ -13,30 +13,35 @@
 monitoring/
 ├── alerts/                            # 告警规则
 │   └── cupolas-alerts.yml             # Cupolas 子系统告警规则
-└── dashboards/                        # 仪表盘
-    └── cupolas-dashboard.json         # Cupolas 监控仪表盘
+├── dashboards/                        # 仪表盘
+│   └── cupolas-dashboard.json         # Cupolas CI/CD 监控仪表盘
+└── otel-collector-manager.yaml        # OpenTelemetry Collector 配置（OTLP gRPC/HTTP → logging）
 ```
 
 ## 核心组件
 
 ### alerts/cupolas-alerts.yml
 
-Cupolas 子系统的 Prometheus 告警规则，定义：
+Cupolas 子系统的 Prometheus 告警规则，共 15 条，覆盖：
 
-- 资源使用率告警（CPU / 内存 / 磁盘）
-- 服务可用性告警
-- 性能异常告警
-- 安全事件告警
+- 构建 / 测试流水线质量门禁（构建失败、构建超时、构建成功率下降、测试失败、测试覆盖率下降）
+- 安全事件（高危 / 严重漏洞、密钥泄露）
+- 代码质量（质量评分下降、警告数）
+- 部署与发布（部署失败、自动回滚触发）
+- 运行健康（健康检查失败）
+- 性能退化（构建性能退化、基准回归）
 
 ### dashboards/cupolas-dashboard.json
 
-Cupolas 子系统的 Grafana 仪表盘配置，提供：
+Cupolas 子系统的 Grafana CI/CD 仪表盘，提供：
 
-- 系统概览面板
-- 资源使用趋势图
-- 请求延迟分布
-- 错误率监控
-- 安全事件时间线
+- 构建状态概览与构建成功率
+- 构建时长趋势与分阶段时长
+- 测试覆盖率与测试结果
+- 静态分析问题
+- 安全漏洞（按严重程度）与开源安全问题
+- 部署状态与近期部署
+- Fuzzing 结果与基准对比
 
 ## 依赖关系
 

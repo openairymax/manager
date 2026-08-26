@@ -33,7 +33,7 @@ schema/
 | `_metadata.schema.json` | Schema 文件自身的版本与依赖定义 | — |
 | `agent-registry.schema.json` | Agent 注册表格式 | `agent/registry.yaml` |
 | `config-audit-log.schema.json` | 配置变更审计日志规范 | `audit/sample_audit_log.json` |
-| `config-management.schema.json` | Manager 自身管理配置 | `manager_management.yaml` |
+| `config-management.schema.json` | Manager 自身管理配置 | `deployment/manager_management.yaml` |
 | `kernel-settings.schema.json` | 内核级配置（内存/调度/并发限制） | `kernel/settings.yaml` |
 | `logging.schema.json` | 日志配置（级别/格式/输出目标） | `logging/manager.yaml` |
 | `model.schema.json` | 模型配置（Provider/参数/上下文窗口） | `model/model.yaml` |

@@ -5,13 +5,13 @@
 
 ## 概述
 
-`manager/sanitizer/` 统一管理 AgentRT 的输入安全检测规则和内存检测工具抑制规则。安全检测规则基于 OWASP TOP 10，覆盖 XSS、SQL 注入、命令注入、路径遍历、PII 泄露、提示注入和恶意代码等 7 大攻击类别共 25 条规则。内存工具抑制规则用于消除第三方库在 LeakSanitizer 和 Valgrind 检测中的已知误报。
+`manager/sanitizer/` 统一管理 AgentRT 的输入安全检测规则和内存检测工具抑制规则。安全检测规则基于 OWASP TOP 10，覆盖 XSS、SQL 注入、路径遍历、命令注入、PII、敏感数据、提示注入和恶意代码等 8 大攻击类别共 26 条规则（默认启用 25 条）。内存工具抑制规则用于消除第三方库在 LeakSanitizer 和 Valgrind 检测中的已知误报。
 
 ## 目录结构
 
 ```
 sanitizer/
-├── sanitizer_rules.json         # 输入安全检测规则集（25 条规则，7 大类别）
+├── sanitizer_rules.json         # 输入安全检测规则集（26 条规则，8 大类别）
 ├── lsan-suppressions            # LeakSanitizer 内存泄漏抑制规则
 └── valgrind-suppressions        # Valgrind 内存检测抑制规则
 ```

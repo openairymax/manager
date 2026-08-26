@@ -38,7 +38,7 @@ manager/
 │   ├── skill-registry.schema.json     # 技能注册表
 │   └── tool-service.schema.json       # tool_d 服务
 ├── sanitizer/                         # Sanitizer 抑制 + 输入规则
-│   ├── sanitizer_rules.json           # 7 大攻击类别的 25 条输入规则
+│   ├── sanitizer_rules.json           # 8 大攻击类别的 26 条输入规则（默认启用 25 条）
 │   ├── lsan-suppressions              # LeakSanitizer 抑制文件
 │   └── valgrind-suppressions          # Valgrind 抑制文件
 ├── security/                          # 安全策略与 RBAC
@@ -155,7 +155,7 @@ python tools/src/drift_detector.py --action detect --fail-on-drift
 python tools/src/config_diff.py config_v1.json config_v2.json
 
 # 清理版本历史（保留最近 10 个版本）
-python tools/src/config_version_cleanup.py --keep 10
+python tools/src/config_version_cleanup.py --max-versions 10
 
 # 生成审计日志样例
 python tools/src/audit_log_generator.py --count 10 --output audit.json
