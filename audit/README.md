@@ -56,7 +56,7 @@ audit/
 | 组件 | 用途 |
 |------|------|
 | `schema/config-audit-log.schema.json` | 审计日志格式校验 |
-| `tools/audit_log_generator.py` | 审计日志生成工具 |
+| `tools/src/audit_log_generator.py` | 审计日志生成工具 |
 
 ---
 

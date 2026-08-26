@@ -61,13 +61,15 @@ environment/
 | 配置项 | Development | Staging | Production |
 |--------|-------------|---------|------------|
 | `kernel.log_level` | debug | info | warning |
-| `kernel.scheduler.max_concurrency` | 100 | 200 | 500 |
-| `kernel.memory.pool_size_mb` | 1024 | 2048 | 4096 |
-| `security.sandbox.isolation_type` | process | process | container |
-| `security.secrets.provider` | env | env | vault |
-| `security.session.timeout_sec` | 3600 | 1800 | 1800 |
+| `kernel.scheduler.max_concurrency` | — | — | 500 |
+| `kernel.memory.pool_size_mb` | — | — | 4096 |
+| `security.sandbox.isolation_type` | none | process | container |
+| `security.secrets.provider` | — | — | vault |
+| `security.session.timeout_sec` | — | — | 1800 |
 | `logging.level` | debug | info | warning |
-| `logging.format` | text | json | json |
+| `logging.format` | color | json | json |
+
+> `—` 表示该环境未在覆盖文件中设置，沿用基础配置（`configs/agentrt.yaml` 或各模块配置，如 `kernel/settings.yaml`、`security/policy.yaml`、`logging/manager.yaml`）。
 
 ## 依赖关系
 

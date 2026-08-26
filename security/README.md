@@ -26,9 +26,9 @@ security/
 | **默认策略** | deny-by-default（默认拒绝所有访问） |
 | **权限规则** | 文件系统/网络/代码执行/环境变量四类权限控制 |
 | **审计规则** | 敏感操作审计、日志加密（AES-256-GCM）、告警 Webhook |
-| **沙箱配置** | 隔离类型（process/container/wasm）、资源限制、Seccomp/AppArmor |
+| **沙箱配置** | 隔离类型（docker/wasm/process/container/none）、资源限制、Seccomp/AppArmor |
 | **入侵检测** | 异常检测阈值、阻止模式（提示注入/越狱）、行为分析 |
-| **密钥管理** | 提供者选择（env/file/vault/cloud_kms）、静态加密、轮换周期 |
+| **密钥管理** | 提供者选择（env/file/vault/aws_kms/azure_keyvault/gcp_kms）、静态加密、轮换周期 |
 | **会话安全** | 超时控制、并发限制、JWT 令牌配置 |
 | **热更新** | 安全策略支持热重载 |
 

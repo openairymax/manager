@@ -36,9 +36,11 @@ logging/
 | 配置项 | Development | Production |
 |--------|-------------|------------|
 | `level` | debug | warning |
-| `format` | text | json |
-| `sampling.enabled` | false | true |
-| `async.enabled` | false | true |
+| `format` | color | json |
+| `sampling.enabled` | false（继承基础配置） | true |
+| `async.enabled` | true（继承基础配置） | true |
+
+> 未在环境覆盖中设置的配置项沿用 `logging/manager.yaml` 基础配置（如 `sampling.enabled: false`、`async.enabled: true`）。
 
 ## 依赖关系
 

@@ -5,167 +5,97 @@
 
 ## 概述
 
-`manager/tests/` 包含 Manager 模块的完整测试套件（计划中），涵盖配置语法校验、JSON Schema 验证、配置集成测试、审计日志验证和配置漂移检测器测试。测试套件遵循 00-architectural-principles.md 的 **E-8 可测试性原则**，提供统一的测试运行器，支持选择性执行和详细报告输出。
-
-> **注意**：以下测试文件均为计划中，尚未实现。当前目录仅包含本 README 文件。
+`manager/tests/` 包含 Manager 模块的测试套件，覆盖配置一致性（配置漂移检测铁律）、`tools/` 工具集的单元测试与集成测试。测试套件遵循 00-architectural-principles.md 的 **E-8 可测试性原则**，通过 pytest 运行。
 
 ## 目录结构
 
 ```
 tests/
-├── test_config_syntax.py         # 配置文件语法验证测试（计划中）
-├── test_schema_validation.py     # JSON Schema 校验测试（计划中）
-├── test_config_integration.py    # 配置集成测试（计划中）
-├── test_audit_log_validation.py  # 审计日志验证测试（计划中）
-├── test_drift_detector.py        # 配置漂移检测器测试（计划中）
-├── run_all_tests.py              # 测试套件运行器（计划中）
-└── README.md                     # 本文件
+├── test_base_utils.py         # tools/base/utils.py 单元测试（ConfigLoader / ReportExporter / FileHelper）
+├── test_config_consistency.py # 配置一致性测试（遗留路径禁令、SSoT 同源校验）
+├── test_config_diff.py        # tools/src/config_diff.py 单元测试
+├── test_schema_diff.py        # tools/src/schema_diff.py 单元测试
+├── test_tools.py              # tools/ 工具集成测试（audit_log_generator / drift_detector / config_version_cleanup）
+└── README.md                  # 本文件
 ```
 
 ## 测试类型
 
-### 1. 配置语法验证 (`test_config_syntax.py`)
+### 1. 基础工具测试 (`test_base_utils.py`)
 
-验证所有配置文件的 JSON/YAML 格式正确性：
+`tools/base/utils.py` 的单元测试：
 
-- YAML/JSON 语法合法性
-- UTF-8 编码检查
-- 环境变量格式验证
-- 文件完整性检查
+- `ConfigLoader`：YAML / JSON / BOM 加载、文件不存在等错误处理
+- `ReportExporter` / `FileHelper`：报告导出与文件操作
 
-### 2. Schema 验证 (`test_schema_validation.py`)
+### 2. 配置一致性测试 (`test_config_consistency.py`)
 
-验证配置内容是否符合 JSON Schema 定义：
+守护 AIRY_HOME 路径体系与密钥变量名 SSoT，防止声明与实现漂移：
 
-- 9 个 Schema 文件的校验规则覆盖
-- 272 项校验规则逐一验证
-- 必填字段检查
-- 值域约束验证
-- 类型一致性检查
+- T1：`configs/agentrt.yaml` 无遗留硬编码路径（`/var/lib`、`/var/log`、`~/.agentrt` 等），本地路径值以 `${AIRY_HOME}` 开头
+- T2：`agentrt.yaml` 审计日志路径与 C 侧 `daemon_security.c` 默认一致
+- T3：`model/model.yaml` 的 `api_key_env` 变量 ⊆ `secrets.env.example`（密钥变量名 SSoT），模板禁止写入真实密钥
+- T4：`model.yaml` 与 `model.json` 同源（默认模型一致）
+- T5：openlab key fallback 链覆盖 `model.yaml` 的 OpenAI 兼容 provider
 
-### 3. 配置集成测试 (`test_config_integration.py`)
+### 3. 配置差异对比测试 (`test_config_diff.py`)
 
-验证配置在完整流程中的正确性和一致性：
+`tools/src/config_diff.py` 的单元测试：
 
-- 跨模块配置依赖关系验证
-- 配置合并（Base + Environment + Runtime）正确性
-- 热重载后配置一致性
-- 环境变量覆盖优先级
+- `ValueType` 值类型检测、`normalize_value` 归一化
+- `deep_diff` 递归对比、`DiffEntry` / `DiffResult` 结构
+- `compare_configs` 配置对比、`load_config_file` 加载、`format_diff_entry` 输出
 
-### 4. 审计日志验证 (`test_audit_log_validation.py`)
+### 4. Schema 差异测试 (`test_schema_diff.py`)
 
-验证审计日志是否符合 `config-audit-log.schema.json` 规范：
+`tools/src/schema_diff.py` 的单元测试：
 
-- 7 种动作类型的日志格式验证
-- 操作者信息完整性
-- 校验和（SHA-256）正确性
-- 变更项（changes）结构验证
+- `DiffSeverity` / `DiffEntry` / `DiffReport` 数据结构
+- `SchemaDiffer`：11 个 Schema 文件与 `agentrt.yaml` 的双向一致性检查
 
-### 5. 漂移检测器测试 (`test_drift_detector.py`)
+### 5. 工具集成测试 (`test_tools.py`)
 
-验证配置漂移检测器的功能：
+`tools/` 工具集的集成测试：
 
-- 基线创建（SHA-256 哈希、文件元数据）
-- 文件修改检测（DriftType.MODIFIED）
-- 文件删除检测（DriftType.DELETED）
-- 文件新增检测（DriftType.ADDED）
-- 敏感文件严重程度（CRITICAL/WARNING/INFO）
-- 报告导出（JSON / Markdown）
-- 忽略模式验证
-- CLI 接口测试
+- **审计日志生成器**：`ActionType`（LOAD/RELOAD/CHANGE/ROLLBACK/VALIDATE/EXPORT/IMPORT）、`OperatorType`（user/system/ci_cd）、`AuditLogEntry` / `AuditLogGenerator` 生成与导出
+- **配置漂移检测器**：`DriftSeverity` / `DriftType` / `DriftReport`、`ConfigDriftDetector` 的基线创建、漂移检测、严重程度分级与报告导出
+- **版本历史清理**：`VersionInfo` / `CleanupResult` / `ConfigVersionCleanup` 清理逻辑与 `format_bytes`
 
 ## 使用方式
 
-### 通过 pytest 运行
-
 ```bash
 # 运行所有测试
-pytest manager/tests/ -v
+python -m pytest tests/ -v
 
 # 运行指定测试
-pytest manager/tests/test_config_syntax.py
-pytest manager/tests/test_schema_validation.py
-pytest manager/tests/test_drift_detector.py
+python -m pytest tests/test_config_diff.py
+python -m pytest tests/test_schema_diff.py
+python -m pytest tests/test_tools.py
+python -m pytest tests/test_config_consistency.py
 
 # 生成 HTML 测试报告
-pytest --html=report.html manager/tests/
+python -m pytest --html=report.html tests/
 ```
-
-### 通过统一运行器
-
-```bash
-# 运行所有测试
-python manager/tests/run_all_tests.py
-
-# 详细模式
-python manager/tests/run_all_tests.py --verbose
-
-# 指定配置目录
-python manager/tests/run_all_tests.py --config-dir ./configs
-
-# 只运行指定测试
-python manager/tests/run_all_tests.py syntax schema
-python manager/tests/run_all_tests.py integration
-```
-
-### 运行器参数
-
-| 参数 | 缩写 | 说明 |
-|------|------|------|
-| `--config-dir` | `-c` | Manager 配置根目录路径（默认: `../`） |
-| `--verbose` | `-v` | 输出详细测试信息 |
-| `tests` | - | 要运行的测试名称关键词（可选：syntax / schema / integration） |
-
-### 退出码
-
-| 退出码 | 含义 |
-|--------|------|
-| 0 | 所有测试通过 |
-| 1 | 存在失败的测试 |
-| 2 | 参数错误或执行异常 |
-
-## 配置-Schema 映射
-
-| 配置文件 | Schema 文件 | 测试覆盖 |
-|----------|-------------|---------|
-| `kernel/settings.yaml` | `kernel-settings.schema.json` | 语法 + Schema + 集成 |
-| `model/model.yaml` | `model.schema.json` | 语法 + Schema + 集成 |
-| `security/policy.yaml` | `security-policy.schema.json` | 语法 + Schema + 集成 |
-| `sanitizer/sanitizer_rules.json` | `sanitizer-rules.schema.json` | 语法 + Schema + 集成 |
-| `logging/manager.yaml` | `logging.schema.json` | 语法 + Schema + 集成 |
-| `manager_management.yaml` | `config-management.schema.json` | 语法 + Schema + 集成 |
-| `service/tool_d/tool.yaml` | `tool-service.schema.json` | 语法 + Schema + 集成 |
-| `agent/registry.yaml` | `agent-registry.schema.json` | 语法 + Schema + 集成 |
-| `skill/registry.yaml` | `skill-registry.schema.json` | 语法 + Schema + 集成 |
 
 ## 测试示例
 
-### 配置语法测试
+### 配置一致性测试
 
 ```python
-def test_yaml_syntax():
-    """验证 YAML 文件语法正确性"""
-    config_path = Path("kernel/settings.yaml")
-    content = config_path.read_text(encoding='utf-8')
-    data = yaml.safe_load(content)
-    assert data is not None
-```
-
-### Schema 验证测试
-
-```python
-def test_kernel_config_schema():
-    """验证内核配置符合 Schema 定义"""
-    config = load_config("kernel/settings.yaml")
-    schema = load_schema("kernel-settings.schema.json")
-    assert validate(config, schema) is True
+def test_no_legacy_paths():
+    """agentrt.yaml 实际配置值（非注释）禁止遗留路径。"""
+    text = AGENTRT_YAML.read_text(encoding="utf-8")
+    code_lines = [ln for ln in text.splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
+    body = "\n".join(code_lines)
+    for legacy in LEGACY_PATH_PATTERNS:
+        assert legacy not in body
 ```
 
 ### 漂移检测测试
 
 ```python
 def test_detect_modified_file():
-    """测试检测文件修改"""
+    """测试检测文件修改。"""
     detector = ConfigDriftDetector(config_dir)
     detector.create_baseline()
 
@@ -183,7 +113,6 @@ def test_detect_modified_file():
 |------|------|
 | Python ≥ 3.10 | 运行环境 |
 | pytest | 测试框架 |
-| jsonschema | Schema 校验 |
 | PyYAML | YAML 解析 |
 
 ---
