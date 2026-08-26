@@ -73,7 +73,7 @@ manager/
 
 ### 2. Agent Management (`agent/`)
 
-`agent/registry.yaml` registers 12 agents across roles (product_manager, architect, frontend, backend, tester, devops, security, data_engineer, coordinator, reviewer, analyst, plus a custom template). Each agent entry is a full contract: capabilities (with input/output JSON Schema, token estimates, success rate), a dual-system model configuration (System 1 for fast response, System 2 for deep reasoning), `required_permissions`, `cost_profile`, `trust_metrics` and `resource_limits`. Validated against `schema/agent-registry.schema.json`; contract paths point at `ecosystem/openlab/contrib/agents/*/contract.json`.
+`agent/registry.yaml` registers 12 agents across roles (product_manager, architect, frontend, backend, tester, devops, security, data_engineer, coordinator, reviewer, analyst, plus a custom template). Each agent entry is a full contract: capabilities (with input/output JSON Schema, token estimates, success rate), a dual-system model configuration (System 1 for fast response, System 2 for deep reasoning), `required_permissions`, `cost_profile`, `trust_metrics` and `resource_limits`. Validated against `schema/agent-registry.schema.json`; contract paths point at `ecosystem/agents/airymax_agents/*/contract.json`.
 
 ### 3. Environment Management (`environment/`)
 
