@@ -85,7 +85,7 @@ security:
     cache_ttl_seconds: 300
   audit:
     enabled: true
-    log_path: "${AIRY_HOME}/logs/daemon_audit.log"
+    log_path: "${AIRY_HOME}/data/agentrt/logs/daemon_audit.log"
 
 # ─── 多 Agent 配置 ───
 multi_agent:
