@@ -36,7 +36,7 @@ tests/
 - T2：`agentrt.yaml` 审计日志路径与 C 侧 `daemon_security.c` 默认一致
 - T3：`model/model.yaml` 的 `api_key_env` 变量 ⊆ `secrets.env.example`（密钥变量名 SSoT），模板禁止写入真实密钥
 - T4：`model.yaml` 与 `model.json` 同源（默认模型一致）
-- T5：openlab key fallback 链覆盖 `model.yaml` 的 OpenAI 兼容 provider
+- T5：orchestration key fallback 链覆盖 `model.yaml` 的 OpenAI 兼容 provider
 
 ### 3. 配置差异对比测试 (`test_config_diff.py`)
 

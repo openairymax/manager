@@ -7,7 +7,7 @@
   - T2: agentrt.yaml 审计日志路径与 C 侧 daemon_security.c 默认一致
   - T3: model.yaml providers[].api_key_env ⊆ secrets.env.example 变量（SSoT）
   - T4: model.yaml 与 model.json 同源（default_provider / default_model）
-  - T5: openlab key fallback 链覆盖 model.yaml 的 OpenAI 兼容 provider
+  - T5: orchestration key fallback 链覆盖 model.yaml 的 OpenAI 兼容 provider
 
 文件定位均基于测试文件相对路径推导，不依赖本地绝对路径。
 """
@@ -25,8 +25,8 @@ _MANAGER_DIR = Path(__file__).resolve().parent.parent
 MODEL_YAML = _MANAGER_DIR / "model" / "model.yaml"
 MODEL_JSON = _MANAGER_DIR / "model" / "model.json"
 AGENTRT_YAML = _MANAGER_DIR / "configs" / "agentrt.yaml"
-SECRETS_TEMPLATE = _HUB_ROOT / "devtools" / "scripts" / "ops" / "templates" / "secrets.env.example"
-OPENLAB_LLM = _HUB_ROOT / "ecosystem" / "openlab" / "openlab" / "core" / "llm.py"
+SECRETS_TEMPLATE = _HUB_ROOT.parent / "tools" / "scripts" / "ops" / "templates" / "secrets.env.example"
+ORCHESTRATION_LLM = _HUB_ROOT / "ecosystem" / "agents" / "orchestration" / "core" / "llm.py"
 
 # 遗留硬编码路径黑名单（配置漂移检测）
 LEGACY_PATH_PATTERNS = [
@@ -77,9 +77,9 @@ class TestAuditLogPathConsistency:
     """T2: agentrt.yaml 审计日志路径与 daemon_security.c 默认一致。"""
 
     DAEMON_SECURITY_PATH = (
-        _HUB_ROOT / "agentrt" / "daemons" / "common" / "src" / "daemon_security.c"
+        _HUB_ROOT / "agentrt" / "daemons" / "common" / "src" / "security" / "daemon_security.c"
     )
-    EXPECTED_PATH = "${AIRY_HOME}/logs/daemon_audit.log"
+    EXPECTED_PATH = "${AIRY_HOME}/data/agentrt/logs/daemon_audit.log"
 
     def test_config_matches_c_default(self):
         text = AGENTRT_YAML.read_text(encoding="utf-8")
@@ -121,38 +121,43 @@ class TestSecretsSSoT:
 
 
 class TestModelYamlJsonSameSource:
-    """T4: model.yaml 与 model.json 同源（默认提供商/默认模型一致）。"""
-
-    def test_default_provider_consistent(self):
-        yaml_text = MODEL_YAML.read_text(encoding="utf-8")
-        json_data = json.loads(MODEL_JSON.read_text(encoding="utf-8"))
-
-        m = re.search(r'^\s*default_provider:\s*"([^"]+)"', yaml_text, re.M)
-        assert m, "model.yaml 缺 default_provider"
-        assert m.group(1) == json_data["global"]["default_provider"]
+    """T4: model.yaml 与 model.json 同源（v3 表格：models / default_model 一致）。"""
 
     def test_default_model_consistent(self):
         yaml_text = MODEL_YAML.read_text(encoding="utf-8")
         json_data = json.loads(MODEL_JSON.read_text(encoding="utf-8"))
 
-        # 限定 global 段：providers 内也有 default_model（provider 级默认）
-        global_section = yaml_text.split("global:", 1)[1]
-        m = re.search(r'^\s*default_model:\s*"([^"]+)"', global_section, re.M)
-        assert m, "model.yaml global 段缺 default_model"
-        assert m.group(1) == json_data["global"]["default_model"]
+        m = re.search(r'^\s*default_model:\s*([^\s#]+)', yaml_text, re.M)
+        assert m, "model.yaml 缺 default_model"
+        assert m.group(1) == json_data["default_model"], \
+            "model.yaml 与 model.json 的 default_model 不一致"
+
+    def test_models_table_matches_json(self):
+        yaml_text = MODEL_YAML.read_text(encoding="utf-8")
+        json_data = json.loads(MODEL_JSON.read_text(encoding="utf-8"))
+
+        yaml_names = re.findall(r'^\s*-\s*name:\s*(\S+)', yaml_text, re.M)
+        json_names = [m.get("name") for m in json_data.get("models", [])]
+        assert yaml_names == json_names, \
+            f"model.yaml models 表与 model.json 不一致: {yaml_names} != {json_names}"
+
+        # v3 表格必填字段（model_id 即调用时的模型名，api_key_env 可空）
+        for m in json_data.get("models", []):
+            for field in ("name", "mode", "api_format", "base_url", "model_id"):
+                assert field in m, f"model.json 模型行缺 {field}: {m.get('name', '?')}"
 
 
-class TestOpenlabKeyFallbackCoversModel:
-    """T5: openlab key fallback 链覆盖 model.yaml 的 OpenAI 兼容 provider。"""
+class TestOrchestrationKeyFallbackCoversModel:
+    """T5: orchestration key fallback 链覆盖 model.yaml 的 OpenAI 兼容 provider。"""
 
-    # openlab 为 OpenAI 兼容客户端，覆盖 openai/deepseek/anthropic 三个兼容
+    # orchestration 为 OpenAI 兼容客户端，覆盖 openai/deepseek/anthropic 三个兼容
     # provider 的 bearer key。google（generativelanguage 协议）与 local（无 key）
     # 不属兼容范围，由 llm_d 侧另行处理。
     OPENAI_COMPAT_KEYS = {"OPENAI_API_KEY", "DEEPSEEK_API_KEY", "ANTHROPIC_API_KEY"}
 
     def test_fallback_chain_covers_providers(self):
         model_text = MODEL_YAML.read_text(encoding="utf-8")
-        llm_text = OPENLAB_LLM.read_text(encoding="utf-8")
+        llm_text = ORCHESTRATION_LLM.read_text(encoding="utf-8")
 
         used_keys = set(re.findall(r'api_key_env:\s*"([^"]+)"', model_text))
         used_keys.discard("")
@@ -163,14 +168,14 @@ class TestOpenlabKeyFallbackCoversModel:
         m = re.search(
             r'for var in \(([^)]*)\)', llm_text
         )
-        assert m, "openlab _resolve_api_key 未定义 fallback 链"
+        assert m, "orchestration _resolve_api_key 未定义 fallback 链"
         chain = {v.strip().strip('"') for v in m.group(1).split(",") if v.strip()}
 
         missing = compat_keys - chain
         assert not missing, \
-            f"openlab fallback 链未覆盖 model.yaml 的 OpenAI 兼容 provider key: {missing}"
+            f"orchestration fallback 链未覆盖 model.yaml 的 OpenAI 兼容 provider key: {missing}"
 
     def test_deepseek_in_fallback_chain(self):
         """默认提供商 DeepSeek 的 key 变量必须在 fallback 链中。"""
-        llm_text = OPENLAB_LLM.read_text(encoding="utf-8")
+        llm_text = ORCHESTRATION_LLM.read_text(encoding="utf-8")
         assert "DEEPSEEK_API_KEY" in llm_text
