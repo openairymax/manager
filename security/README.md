@@ -12,7 +12,7 @@
 ```
 security/
 ├── policy.yaml              # 安全策略定义（默认策略 + 权限规则 + 沙箱 + 入侵检测）
-└── permission_rules.yaml    # 权限规则配置
+└── README.md                # 模块说明（SSoT 边界见下）
 ```
 
 ## 核心组件
@@ -41,9 +41,15 @@ security/
 | 代码执行 | 3 | Python/JavaScript/Shell 沙箱执行 |
 | 环境变量 | 5 | API Key 读取允许、AGENTRT_* 允许、其他拒绝 |
 
-### permission_rules.yaml
+### 工具权限规则（SSoT 边界）
 
-细粒度权限规则配置，定义各角色和服务的具体访问权限。
+运行时工具级 ACL（tool_d/agent_d 加载的 `rules: [{agent, tool, effect}]`
+格式）**不在此目录维护**——权威模板为 tools 仓
+`scripts/ops/templates/permission_rules.yaml`（v1.1.0），经 install.sh 部署到
+`$AIRY_HOME/config/cupolas/permission_rules.yaml`。本目录历史上的
+`permission_rules.yaml`（v1.0.0，action/resource 旧格式）与运行时 schema
+不兼容，已于 2026-08-28 删除，避免同名异格式误导。安全策略的治理入口为
+本目录 `policy.yaml`。
 
 ## 依赖关系
 

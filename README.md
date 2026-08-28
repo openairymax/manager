@@ -42,8 +42,8 @@ manager/
 │   ├── lsan-suppressions              # LeakSanitizer suppression file
 │   └── valgrind-suppressions          # Valgrind suppression file
 ├── security/                          # Security policy & RBAC
-│   ├── policy.yaml                    # Default policy, sandbox, audit, intrusion detection
-│   └── permission_rules.yaml          # Fine-grained RBAC rules
+│   └── policy.yaml                    # Default policy, sandbox, audit, intrusion detection
+│                                      # (tool ACL runtime template: tools/scripts/ops/templates)
 ├── kernel/                            # Kernel configuration (kernel.yaml, settings.yaml)
 ├── model/                             # LLM model configuration (model.yaml, model.json)
 ├── logging/                           # Logging configuration (manager.yaml)
@@ -121,7 +121,7 @@ The v0.1.1 unified AgentRT runtime configuration covering: `kernel` (IPC, schedu
 |----------|------------------------|
 | **AgentRT runtime** | Reads `configs/agentrt.yaml` and environment overlays at startup; loads `security/`, `kernel/`, `model/`, `logging/` settings at runtime |
 | **AgentRT build toolchain** | Uses `sanitizer/lsan-suppressions` and `sanitizer/valgrind-suppressions` at **build / test time** to silence known third-party false positives |
-| **Cupolas security module** | Co-owns `sanitizer/` and `security/` content under the dual-responsibility model; consumes `security/policy.yaml` and `permission_rules.yaml` |
+| **Cupolas security module** | Co-owns `sanitizer/` and `security/` content under the dual-responsibility model; consumes `security/policy.yaml` (runtime tool ACL template is in tools/scripts/ops/templates, SSoT) |
 | **tool_d daemon** | Reads `service/tool_d/tool.yaml` (validated by `tool-service.schema.json`) |
 | **Agent & skill registries** | Runtime resolves agents/skills from `agent/registry.yaml` and `skill/registry.yaml`; agent contract paths point into `ecosystem/agents/airymax_agents/` |
 | **CI / CD pipelines** | Run `tools/drift_detector.py` and `tools/config_diff.py` as configuration validation gates |

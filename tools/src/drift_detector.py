@@ -124,9 +124,11 @@ class ConfigDriftDetector:
     ]
     
     # 敏感文件（变更时为CRITICAL级别）
+    # 注：security/permission_rules.yaml 已删除——运行时工具 ACL 权威模板在
+    # tools 仓 scripts/ops/templates/permission_rules.yaml（v1.1.0），manager
+    # 不再维护副本（SSoT，2026-08-28）。
     SENSITIVE_FILES = [
         "security/policy.yaml",
-        "security/permission_rules.yaml",
         "model/model.yaml",
         "kernel/settings.yaml",
         "manager_management.yaml"

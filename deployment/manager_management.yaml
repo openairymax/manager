@@ -32,11 +32,12 @@ hot_reload:
   reload_signal: "SIGHUP"
   
   # 支持热更新的配置文件
+  # 注：security/permission_rules.yaml 已删除（运行时工具 ACL 权威模板在
+  # tools 仓 scripts/ops/templates/permission_rules.yaml，SSoT，2026-08-28）。
   watch_files:
     - "kernel/settings.yaml"
     - "logging/manager.yaml"
     - "security/policy.yaml"
-    - "security/permission_rules.yaml"
     - "sanitizer/sanitizer_rules.json"
   
   # 支持热更新的配置项（按路径）

@@ -42,8 +42,8 @@ manager/
 │   ├── lsan-suppressions              # LeakSanitizer 抑制文件
 │   └── valgrind-suppressions          # Valgrind 抑制文件
 ├── security/                          # 安全策略与 RBAC
-│   ├── policy.yaml                    # 默认策略、沙箱、审计、入侵检测
-│   └── permission_rules.yaml          # 细粒度 RBAC 规则
+│   └── policy.yaml                    # 默认策略、沙箱、审计、入侵检测
+│                                      # （工具 ACL 运行时模板：tools/scripts/ops/templates）
 ├── kernel/                            # 内核配置（kernel.yaml、settings.yaml）
 ├── model/                             # LLM 模型配置（model.yaml、model.json）
 ├── logging/                           # 日志配置（manager.yaml）
@@ -121,7 +121,7 @@ v0.1.1 的 AgentRT 统一运行时配置，覆盖：`kernel`（IPC、调度器�
 |--------|----------|
 | **AgentRT 运行时** | 启动时读取 `configs/agentrt.yaml` 及环境覆盖层；运行时加载 `security/`、`kernel/`、`model/`、`logging/` 配置 |
 | **AgentRT 构建工具链** | **构建 / 测试期**使用 `sanitizer/lsan-suppressions` 与 `sanitizer/valgrind-suppressions` 抑制第三方库已知误报 |
-| **Cupolas 安全模块** | 按双重责任模型共有 `sanitizer/` 与 `security/` 内容；消费 `security/policy.yaml` 与 `permission_rules.yaml` |
+| **Cupolas 安全模块** | 按双重责任模型共有 `sanitizer/` 与 `security/` 内容；消费 `security/policy.yaml`（运行时工具 ACL 模板在 tools/scripts/ops/templates，SSoT） |
 | **tool_d 守护进程** | 读取 `service/tool_d/tool.yaml`（由 `tool-service.schema.json` 校验） |
 | **Agent 与技能注册表** | 运行时从 `agent/registry.yaml` 与 `skill/registry.yaml` 解析；Agent 契约路径指向 `ecosystem/agents/airymax_agents/` |
 | **CI / CD 流水线** | 运行 `tools/drift_detector.py` 与 `tools/config_diff.py` 作为配置校验门禁 |
