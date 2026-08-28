@@ -180,7 +180,6 @@ class AuditLogGenerator:
         "agent/registry.yaml",
         "skill/registry.yaml",
         "security/policy.yaml",
-        "security/permission_rules.yaml",
         "logging/manager.yaml",
         "environment/production.yaml",
         "environment/staging.yaml",
