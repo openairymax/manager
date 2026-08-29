@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentrt.spharx.ai/schemas/plugin-manifest-v1.schema.json",
+  "title": "AgentRT Plugin Manifest Schema",
+  "description": "Manifest schema for AgentRT ecosystem plugins (ecosystem/skills/plugins/*/manifest.yaml). 0.1.6 生态 SSoT（S-4）：必填约束与 plugin_d/plugin_discovery.c 解析校验对齐。",
+  "type": "object",
+  "required": [
+    "name",
+    "version",
+    "author",
+    "description",
+    "type",
+    "api_version",
+    "min_airy_version",
+    "library"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "插件标识（小写蛇形，与库名前缀 libairy_skill_<name> 一致）"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "插件版本（语义化版本）"
+    },
+    "author": {
+      "type": "string",
+      "description": "插件作者/维护者"
+    },
+    "description": {
+      "type": "string",
+      "description": "插件能力描述"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["tool_provider", "protocol_adapter", "memory_provider", "hook_extension"],
+      "description": "插件类型（与 plugin_type_t 对齐，非法值拒绝加载）"
+    },
+    "api_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "插件 API 版本（必填，>=1）"
+    },
+    "min_airy_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "最低 AgentRT 兼容版本（必填，>=1）"
+    },
+    "library": {
+      "type": "string",
+      "description": "插件动态库文件名（相对插件目录）"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "插件运行时权限声明"
+    },
+    "config": {
+      "type": "object",
+      "description": "插件配置（键值，由插件自身解释）"
+    }
+  }
+}
