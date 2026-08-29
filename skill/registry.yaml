@@ -368,7 +368,7 @@ skills:
     source: "skills"
     enabled: true
     unit_type: "skill"
-    contract_path: "ecosystem/skills/definitions/code_review.md"
+    contract_path: "agent-workload/ecosystem/skills/definitions/code_review.md"
     permissions:
       - "file:read"
     dependencies: []
@@ -387,7 +387,7 @@ skills:
     source: "skills"
     enabled: true
     unit_type: "skill"
-    contract_path: "ecosystem/skills/definitions/data_analysis.md"
+    contract_path: "agent-workload/ecosystem/skills/definitions/data_analysis.md"
     permissions:
       - "file:read"
     dependencies: []
@@ -406,7 +406,7 @@ skills:
     source: "skills"
     enabled: true
     unit_type: "skill"
-    contract_path: "ecosystem/skills/definitions/security_audit.md"
+    contract_path: "agent-workload/ecosystem/skills/definitions/security_audit.md"
     permissions:
       - "file:read"
     dependencies: []
@@ -425,7 +425,7 @@ skills:
     source: "skills"
     enabled: true
     unit_type: "skill"
-    contract_path: "ecosystem/skills/definitions/text_summarization.md"
+    contract_path: "agent-workload/ecosystem/skills/definitions/text_summarization.md"
     permissions:
       - "memory:read"
     dependencies: []
@@ -444,7 +444,7 @@ skills:
     source: "skills"
     enabled: true
     unit_type: "skill"
-    contract_path: "ecosystem/skills/definitions/web_search.md"
+    contract_path: "agent-workload/ecosystem/skills/definitions/web_search.md"
     permissions:
       - "network:http"
     dependencies: []
