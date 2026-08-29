@@ -5,7 +5,7 @@
 
 ## 概述
 
-`manager/schema/` 包含 AgentRT Manager 模块的全部 JSON Schema 定义，用于验证各模块配置文件的格式正确性和语义约束。共 11 个 Schema 文件，覆盖约 272 项校验规则，确保配置数据的完整性和一致性。
+`manager/schema/` 包含 AgentRT Manager 模块的全部 JSON Schema 定义，用于验证各模块配置文件的格式正确性和语义约束。共 12 个 Schema 文件，覆盖约 272 项校验规则，确保配置数据的完整性和一致性。
 
 ## 目录结构
 
@@ -18,6 +18,7 @@ schema/
 ├── kernel-settings.schema.json       # 内核配置 Schema
 ├── logging.schema.json               # 日志配置 Schema
 ├── model.schema.json                 # 模型配置 Schema
+├── plugin-manifest.schema.json       # 插件 Manifest Schema（S-4）
 ├── sanitizer-rules.schema.json       # 清洗规则 Schema
 ├── security-policy.schema.json       # 安全策略 Schema
 ├── skill-registry.schema.json        # 技能注册 Schema
@@ -37,6 +38,7 @@ schema/
 | `kernel-settings.schema.json` | 内核级配置（内存/调度/并发限制） | `kernel/settings.yaml` |
 | `logging.schema.json` | 日志配置（级别/格式/输出目标） | `logging/manager.yaml` |
 | `model.schema.json` | 模型配置（Provider/参数/上下文窗口） | `model/model.yaml` |
+| `plugin-manifest.schema.json` | 插件 Manifest 格式（plugin_d 加载校验） | `ecosystem/skills/plugins/*/manifest.yaml` |
 | `sanitizer-rules.schema.json` | 输入清洗配置（XSS/SQL 注入规则） | `sanitizer/sanitizer_rules.json` |
 | `security-policy.schema.json` | 安全配置（认证/授权/沙箱隔离） | `security/policy.yaml` |
 | `skill-registry.schema.json` | 技能配置与管理 | `skill/registry.yaml` |
