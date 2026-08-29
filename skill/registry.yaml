@@ -23,7 +23,7 @@ _schema: "schema/skill-registry.schema.json"
 # 注册表元数据
 _metadata:
   last_updated: "2026-03-23T00:00:00Z"
-  total_skills: 10
+  total_skills: 15
 
 # =============================================================================
 # 技能注册列表
@@ -39,7 +39,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "file"
-    contract_path: "ecosystem/skills/contrib/filesystem/contract.json"
     permissions:
       - "file:read"
       - "file:write"
@@ -73,7 +72,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "shell"
-    contract_path: "ecosystem/skills/contrib/shell/contract.json"
     permissions:
       - "code:execute:shell"
     dependencies: []
@@ -105,7 +103,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "api"
-    contract_path: "ecosystem/skills/contrib/http/contract.json"
     permissions:
       - "network:connect"
     dependencies: []
@@ -137,7 +134,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "code"
-    contract_path: "ecosystem/skills/contrib/python/contract.json"
     permissions:
       - "code:execute:python"
     dependencies: []
@@ -169,7 +165,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "code"
-    contract_path: "ecosystem/skills/contrib/javascript/contract.json"
     permissions:
       - "code:execute:javascript"
     dependencies: []
@@ -201,7 +196,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "db"
-    contract_path: "ecosystem/skills/contrib/database/contract.json"
     permissions:
       - "database:connect"
       - "database:query"
@@ -234,7 +228,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "browser"
-    contract_path: "ecosystem/skills/contrib/browser/contract.json"
     permissions:
       - "browser:automate"
       - "network:connect"
@@ -270,7 +263,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "tool"
-    contract_path: "ecosystem/skills/contrib/git/contract.json"
     permissions:
       - "git:clone"
       - "git:commit"
@@ -308,7 +300,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "api"
-    contract_path: "ecosystem/skills/contrib/vector_search/contract.json"
     permissions:
       - "embedding:generate"
       - "vector:search"
@@ -342,7 +333,6 @@ skills:
     source: "builtin"
     enabled: true
     unit_type: "tool"
-    contract_path: "ecosystem/skills/contrib/log_analysis/contract.json"
     permissions:
       - "file:read:${AGENTRT_LOG_DIR}/*"
     dependencies:
@@ -366,3 +356,102 @@ skills:
     license: "MIT"
     created_at: "2026-01-01T00:00:00Z"
     updated_at: "2026-03-23T00:00:00Z"
+
+  # ===========================================================================
+  # skills 叶仓官方技能（SSoT：定义与契约权威位于 skills/definitions/*.md，
+  # 0.1.6 生态 SSoT 收敛后 registry 仅引用，不重复定义）
+  # ===========================================================================
+  - skill_id: "code_review"
+    name: "Code Review"
+    description: "代码审查技能：静态分析 + 缺陷检测 + 改进建议"
+    version: "1.0.0"
+    source: "skills"
+    enabled: true
+    unit_type: "skill"
+    contract_path: "ecosystem/skills/definitions/code_review.md"
+    permissions:
+      - "file:read"
+    dependencies: []
+    tags:
+      - "code"
+      - "review"
+    author: "Spharx AgentRT Team"
+    license: "MIT"
+    created_at: "2026-01-01T00:00:00Z"
+    updated_at: "2026-08-29T00:00:00Z"
+
+  - skill_id: "data_analysis"
+    name: "Data Analysis"
+    description: "数据分析技能：数据清洗、统计分析与可视化"
+    version: "1.0.0"
+    source: "skills"
+    enabled: true
+    unit_type: "skill"
+    contract_path: "ecosystem/skills/definitions/data_analysis.md"
+    permissions:
+      - "file:read"
+    dependencies: []
+    tags:
+      - "data"
+      - "analysis"
+    author: "Spharx AgentRT Team"
+    license: "MIT"
+    created_at: "2026-01-01T00:00:00Z"
+    updated_at: "2026-08-29T00:00:00Z"
+
+  - skill_id: "security_audit"
+    name: "Security Audit"
+    description: "安全审计技能：风险扫描、配置核查与合规建议"
+    version: "1.0.0"
+    source: "skills"
+    enabled: true
+    unit_type: "skill"
+    contract_path: "ecosystem/skills/definitions/security_audit.md"
+    permissions:
+      - "file:read"
+    dependencies: []
+    tags:
+      - "security"
+      - "audit"
+    author: "Spharx AgentRT Team"
+    license: "MIT"
+    created_at: "2026-01-01T00:00:00Z"
+    updated_at: "2026-08-29T00:00:00Z"
+
+  - skill_id: "text_summarization"
+    name: "Text Summarization"
+    description: "文本摘要技能：长文压缩与要点提取"
+    version: "1.0.0"
+    source: "skills"
+    enabled: true
+    unit_type: "skill"
+    contract_path: "ecosystem/skills/definitions/text_summarization.md"
+    permissions:
+      - "memory:read"
+    dependencies: []
+    tags:
+      - "text"
+      - "summary"
+    author: "Spharx AgentRT Team"
+    license: "MIT"
+    created_at: "2026-01-01T00:00:00Z"
+    updated_at: "2026-08-29T00:00:00Z"
+
+  - skill_id: "web_search"
+    name: "Web Search"
+    description: "网络检索技能：搜索查询、结果提取与来源引用"
+    version: "1.0.0"
+    source: "skills"
+    enabled: true
+    unit_type: "skill"
+    contract_path: "ecosystem/skills/definitions/web_search.md"
+    permissions:
+      - "network:http"
+    dependencies: []
+    tags:
+      - "web"
+      - "search"
+    author: "Spharx AgentRT Team"
+    license: "MIT"
+    created_at: "2026-01-01T00:00:00Z"
+    updated_at: "2026-08-29T00:00:00Z"
