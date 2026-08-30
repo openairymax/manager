@@ -10,6 +10,10 @@
   - T5: orchestration key fallback 链覆盖 model.yaml 的 OpenAI 兼容 provider
 
 文件定位均基于测试文件相对路径推导，不依赖本地绝对路径。
+
+跨仓依赖（P2-1 独立组装兼容）：T2 的 agentrt 底座、T3 的 tools 模板、
+T5 的 agents 叶仓不属于 manager 独立 clone；monorepo 伞仓组装场景下
+正常断言，独立 clone 场景对应测试 skip（带原因），不阻断叶仓自测。
 """
 
 from __future__ import annotations
@@ -18,7 +22,11 @@ import json
 import re
 from pathlib import Path
 
+import pytest
+
 # 仓库内文件定位（相对测试文件推导，不硬编码本地路径）
+# monorepo: <hub>/agent-workload/ecosystem/manager/tests -> parents[3] = agent-workload
+# 独立组装: <assembly>/manager/tests -> parents[3] = assembly 根
 _HUB_ROOT = Path(__file__).resolve().parents[3]
 _MANAGER_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +34,14 @@ MODEL_YAML = _MANAGER_DIR / "model" / "model.yaml"
 MODEL_JSON = _MANAGER_DIR / "model" / "model.json"
 AGENTRT_YAML = _MANAGER_DIR / "configs" / "agentrt.yaml"
 SECRETS_TEMPLATE = _HUB_ROOT.parent / "tools" / "scripts" / "ops" / "templates" / "secrets.env.example"
-ORCHESTRATION_LLM = _HUB_ROOT / "ecosystem" / "agents" / "orchestration" / "core" / "llm.py"
+# T5 目标 llm.py：monorepo 为 <hub>/ecosystem/agents/...；独立组装为 <assembly>/agents/...
+ORCHESTRATION_LLM = next(
+    (c for c in (
+        _HUB_ROOT / "ecosystem" / "agents" / "orchestration" / "core" / "llm.py",
+        _HUB_ROOT / "agents" / "orchestration" / "core" / "llm.py",
+    ) if c.exists()),
+    None,
+)
 
 # 遗留硬编码路径黑名单（配置漂移检测）
 LEGACY_PATH_PATTERNS = [
@@ -87,7 +102,8 @@ class TestAuditLogPathConsistency:
 
     def test_c_side_default_unchanged(self):
         """daemon_security.c 默认审计路径与配置声明一致（双向守护）。"""
-        assert self.DAEMON_SECURITY_PATH.exists()
+        if not self.DAEMON_SECURITY_PATH.exists():
+            pytest.skip("agentrt 底座不在独立 clone 中（伞仓组装场景才断言）")
         c_text = self.DAEMON_SECURITY_PATH.read_text(encoding="utf-8")
         assert "airy_log_dir()" in c_text
         assert "daemon_audit.log" in c_text
@@ -96,12 +112,17 @@ class TestAuditLogPathConsistency:
 class TestSecretsSSoT:
     """T3: model.yaml 的 api_key_env 变量 ⊆ secrets.env.example（密钥变量名 SSoT）。"""
 
+    def _template(self) -> Path:
+        if not SECRETS_TEMPLATE.exists():
+            pytest.skip("tools 仓模板不在独立 clone 中（伞仓组装场景才断言）")
+        return SECRETS_TEMPLATE
+
     def test_template_exists(self):
-        assert SECRETS_TEMPLATE.exists(), "secrets.env.example 缺失"
+        self._template()
 
     def test_provider_key_env_covered_by_template(self):
         model_text = MODEL_YAML.read_text(encoding="utf-8")
-        secrets_text = SECRETS_TEMPLATE.read_text(encoding="utf-8")
+        secrets_text = self._template().read_text(encoding="utf-8")
 
         env_vars = set(re.findall(r'^(\w+)=', secrets_text, re.M))
         used_keys = set(re.findall(r'api_key_env:\s*"([^"]+)"', model_text))
@@ -113,7 +134,7 @@ class TestSecretsSSoT:
 
     def test_template_has_no_placeholder_secrets(self):
         """模板中的 key 必须留空，禁止提交真实密钥。"""
-        secrets_text = SECRETS_TEMPLATE.read_text(encoding="utf-8")
+        secrets_text = self._template().read_text(encoding="utf-8")
         for line in secrets_text.splitlines():
             m = re.match(r'^(\w+)=\S+$', line.strip())
             if m:
@@ -155,9 +176,14 @@ class TestOrchestrationKeyFallbackCoversModel:
     # 不属兼容范围，由 llm_d 侧另行处理。
     OPENAI_COMPAT_KEYS = {"OPENAI_API_KEY", "DEEPSEEK_API_KEY", "ANTHROPIC_API_KEY"}
 
+    def _orchestration_llm(self) -> Path:
+        if ORCHESTRATION_LLM is None:
+            pytest.skip("agents 叶仓不在独立 clone 中（伞仓组装场景才断言）")
+        return ORCHESTRATION_LLM
+
     def test_fallback_chain_covers_providers(self):
         model_text = MODEL_YAML.read_text(encoding="utf-8")
-        llm_text = ORCHESTRATION_LLM.read_text(encoding="utf-8")
+        llm_text = self._orchestration_llm().read_text(encoding="utf-8")
 
         used_keys = set(re.findall(r'api_key_env:\s*"([^"]+)"', model_text))
         used_keys.discard("")
@@ -177,5 +203,5 @@ class TestOrchestrationKeyFallbackCoversModel:
 
     def test_deepseek_in_fallback_chain(self):
         """默认提供商 DeepSeek 的 key 变量必须在 fallback 链中。"""
-        llm_text = ORCHESTRATION_LLM.read_text(encoding="utf-8")
+        llm_text = self._orchestration_llm().read_text(encoding="utf-8")
         assert "DEEPSEEK_API_KEY" in llm_text
