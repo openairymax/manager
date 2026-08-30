@@ -189,12 +189,15 @@ skills:
   # ===========================================================================
   # 数据库操作技能
   # ===========================================================================
+  # S-5 收敛（2026-08-30）：本技能在 skills/contrib/ 为社区实验区（规范定义
+  # 阶段、无实现、接口方言与官方 SkillPlugin 契约不兼容），非 AgentRT 内置
+  # 能力，登记降级为 community 源且默认禁用。
   - skill_id: "database_skill"
     name: "Database Operations"
-    description: "提供数据库连接和SQL操作能力"
-    version: "1.0.0"
-    source: "builtin"
-    enabled: true
+    description: "提供数据库连接和SQL操作能力（社区实验，规范定义阶段）"
+    version: "0.1.1"
+    source: "community"
+    enabled: false
     unit_type: "db"
     permissions:
       - "database:connect"
@@ -221,12 +224,14 @@ skills:
   # ===========================================================================
   # 浏览器自动化技能
   # ===========================================================================
+  # S-5 收敛（2026-08-30）：同 database_skill——社区实验区（community），
+  # 规范定义阶段、无实现，默认禁用。
   - skill_id: "browser_skill"
     name: "Browser Automation"
-    description: "提供浏览器自动化和网页抓取能力"
-    version: "1.0.0"
-    source: "builtin"
-    enabled: true
+    description: "提供浏览器自动化和网页抓取能力（社区实验，规范定义阶段）"
+    version: "0.1.1"
+    source: "community"
+    enabled: false
     unit_type: "browser"
     permissions:
       - "browser:automate"
