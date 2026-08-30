@@ -1,0 +1,16 @@
+# Copyright (c) 2026 SPHARX. All Rights Reserved.
+"""pytest 路径引导：manager 独立叶仓自测入口。
+
+manager 是独立叶仓（可单独 clone/测试），顶层包为 `manager`。本 conftest 将
+仓库根加入 sys.path，使 `from manager.tools...` 类导入在 CI（.github/workflows/
+ci.yml 的 pytest 步骤）与本地均可用；伞仓组装场景下 ecosystem.manager 前缀
+由伞仓根 pytest 运行（见 ecosystem/ 聚合测试）处理。
+"""
+
+import sys
+from pathlib import Path
+
+_MANAGER_ROOT = Path(__file__).resolve().parent
+
+if str(_MANAGER_ROOT) not in sys.path:
+    sys.path.insert(0, str(_MANAGER_ROOT))

@@ -18,15 +18,15 @@ audit_log_generator / benchmark_manager / config_version_cleanup 等）之外
 仅依赖 Python 标准库（YAML 解析优先使用系统已装的 PyYAML，缺失时回退
 读取同源 ``model/model.json``，保证零第三方依赖可运行）。
 
-用法示例::
+用法示例（仓库根即 `manager` 包，于上级目录执行）::
 
-    python3 manager.py daemon status
-    python3 manager.py daemon start llm_d
-    python3 manager.py daemon stop llm_d
-    python3 manager.py health
-    python3 manager.py model show
-    python3 manager.py model validate
-    python3 manager.py logs llm_d -n 100
+    python3 -m manager daemon status
+    python3 -m manager daemon start llm_d
+    python3 -m manager daemon stop llm_d
+    python3 -m manager health
+    python3 -m manager model show
+    python3 -m manager model validate
+    python3 -m manager logs llm_d -n 100
 """
 
 from __future__ import annotations
@@ -45,8 +45,9 @@ from typing import Any, Dict, List, Optional, Tuple
 # 路径常量
 # ─────────────────────────────────────────────────────────────
 
-#: 默认 AIRY_HOME：AgentRT 运行根（bin/run/logs/config）
-DEFAULT_AIRY_HOME = Path("/home/spharx/SpharxWorks/.airymaxrt")
+#: 默认 AIRY_HOME：AgentRT 运行根（bin/run/logs/config）。
+#: 与 daemon 约定一致（~/.airymaxrt），避免依赖开发者机器路径。
+DEFAULT_AIRY_HOME = Path.home() / ".airymaxrt"
 
 #: manager 模块根目录（本文件所在目录）
 MANAGER_ROOT = Path(__file__).resolve().parent
