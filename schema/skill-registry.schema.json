@@ -11,6 +11,20 @@
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
       "description": "Configuration file version"
     },
+    "_owner": {
+      "type": "object",
+      "properties": {
+        "module": {"type": "string"},
+        "contact": {"type": "string"},
+        "path": {"type": "string"},
+        "description": {"type": "string"}
+      },
+      "description": "Content ownership metadata (dual-responsibility model)"
+    },
+    "_schema": {
+      "type": "string",
+      "description": "Schema file reference"
+    },
     "_metadata": {
       "type": "object",
       "properties": {
@@ -32,9 +46,9 @@
         "properties": {
           "skill_id": {
             "type": "string",
-            "pattern": "^[a-z][a-z0-9_]*_skill$",
-            "description": "Unique skill identifier",
-            "examples": ["file_reader_skill", "web_search_skill", "code_generator_skill"]
+            "pattern": "^[a-z][a-z0-9_]*(_skill)?$",
+            "description": "Unique skill identifier (builtin/community 用 *_skill 后缀；skills 叶仓官方技能用裸名)",
+            "examples": ["file_reader_skill", "web_search_skill", "web_search"]
           },
           "name": {
             "type": "string",
@@ -57,9 +71,9 @@
           },
           "source": {
             "type": "string",
-            "enum": ["builtin", "community", "custom", "external"],
+            "enum": ["builtin", "community", "custom", "external", "skills"],
             "description": "Skill source type",
-            "examples": ["builtin", "custom", "community"]
+            "examples": ["builtin", "custom", "community", "skills"]
           },
           "enabled": {
             "type": "boolean",
@@ -69,7 +83,7 @@
           },
           "unit_type": {
             "type": "string",
-            "enum": ["tool", "file", "api", "browser", "db", "code", "shell", "custom"],
+            "enum": ["tool", "file", "api", "browser", "db", "code", "shell", "custom", "skill"],
             "description": "Execution unit type",
             "examples": ["tool", "file", "api", "code", "shell"]
           },
