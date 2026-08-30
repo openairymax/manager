@@ -44,7 +44,7 @@ agents:
   - agent_id: "product_manager_v1"
     role: "product_manager"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/product_manager/contract.json"
     description: "负责产品规划、需求分析和项目协调的智能体"
@@ -164,7 +164,7 @@ agents:
   - agent_id: "architect_v1"
     role: "architect"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/architect/contract.json"
     description: "负责系统架构设计和技术决策的智能体"
@@ -244,7 +244,7 @@ agents:
   - agent_id: "frontend_v1"
     role: "frontend"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/frontend/contract.json"
     description: "负责前端界面开发和用户体验优化的智能体"
@@ -325,7 +325,7 @@ agents:
   - agent_id: "backend_v1"
     role: "backend"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/backend/contract.json"
     description: "负责后端服务开发和API设计的智能体"
@@ -407,7 +407,7 @@ agents:
   - agent_id: "tester_v1"
     role: "tester"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/tester/contract.json"
     description: "负责测试用例编写和质量保证的智能体"
@@ -488,7 +488,7 @@ agents:
   - agent_id: "devops_v1"
     role: "devops"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/devops/contract.json"
     description: "负责部署运维和基础设施管理的智能体"
@@ -570,7 +570,7 @@ agents:
   - agent_id: "security_v1"
     role: "security"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/security/contract.json"
     description: "负责安全审计和漏洞检测的智能体"
@@ -651,7 +651,7 @@ agents:
   - agent_id: "data_engineer_v1"
     role: "data_engineer"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     implementation_status: "implemented"
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/data_engineer/contract.json"
@@ -733,7 +733,7 @@ agents:
   - agent_id: "coordinator_v1"
     role: "coordinator"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.0.0"
     enabled: false
     implementation_status: "planned"
     # contract_path: TBD (planned)
@@ -814,7 +814,7 @@ agents:
   - agent_id: "reviewer_v1"
     role: "reviewer"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     implementation_status: "implemented"
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/reviewer/contract.json"
@@ -894,7 +894,7 @@ agents:
   - agent_id: "analyst_v1"
     role: "analyst"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     implementation_status: "implemented"
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/analyst/contract.json"
@@ -976,7 +976,7 @@ agents:
   - agent_id: "coding_v1"
     role: "coding"
     source: "builtin"
-    version: "1.0.0"
+    version: "0.1.1"
     enabled: true
     implementation_status: "implemented"
     contract_path: "agent-workload/ecosystem/agents/airymax_agents/coding/contract.json"
@@ -1056,9 +1056,9 @@ agents:
   # 自定义 Agent 模板
   # ===========================================================================
   - agent_id: "custom_template_v1"
-    role: "custom"
-    source: "custom"
-    version: "1.0.0"
+    role: "custom_template"
+    source: "builtin"
+    version: "0.0.0"
     enabled: false
     implementation_status: "planned"
     # contract_path: TBD (planned)
