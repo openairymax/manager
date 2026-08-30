@@ -438,6 +438,7 @@ class SchemaDiffer:
             ("config-management.schema.json", "config management"),
             ("config-audit-log.schema.json", "audit log"),
             ("sanitizer-rules.schema.json", "sanitizer"),
+            ("plugin-manifest.schema.json", "plugin manifest"),
         ]
 
         for filename, yaml_section in expected_schemas:
