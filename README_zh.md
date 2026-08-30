@@ -7,9 +7,9 @@
 
 [![Version](https://img.shields.io/badge/version-0.1.1-5a6b7e)](https://atomgit.com/openairymax/manager)
 [![License](https://img.shields.io/badge/license-AGPL--3.0+Apache--2.0-4a90d9)](LICENSE)
-[![Branch](https://img.shields.io/badge/branch-feature%2Fofficial--hubs--01-6f7b8e)](https://atomgit.com/openairymax/manager)
+[![Branch](https://img.shields.io/badge/branch-develop%2Fhubs--01-6f7b8e)](https://atomgit.com/openairymax/manager)
 
-**仓库:** `git@atomgit.com:openairymax/manager.git` · **分支:** `feature/official-hubs-01`
+**仓库:** `git@atomgit.com:openairymax/manager.git` · **分支:** `develop/hubs-01`
 
 ---
 
@@ -47,8 +47,8 @@ manager/
 ├── kernel/                            # 内核配置（kernel.yaml、settings.yaml）
 ├── model/                             # LLM 模型配置（model.yaml、model.json）
 ├── logging/                           # 日志配置（manager.yaml）
-├── agent/                             # Agent 注册表（registry.yaml — 12 个 Agent）
-├── skill/                             # 技能注册表（registry.yaml — 10 个技能）
+├── agent/                             # Agent 注册表（registry.yaml — 14 个 Agent）
+├── skill/                             # 技能注册表（registry.yaml — 15 个技能）
 ├── service/                           # 守护进程配置（tool_d/tool.yaml）
 ├── configs/                           # 部署配置模板
 │   ├── agentrt.yaml                   # AgentRT 运行时统一配置（v0.1.1）
@@ -73,7 +73,7 @@ manager/
 
 ### 2. Agent 管理（`agent/`）
 
-`agent/registry.yaml` 注册了 12 个 Agent，覆盖多种角色（product_manager、architect、frontend、backend、tester、devops、security、data_engineer、coordinator、reviewer、analyst，以及自定义模板）。每个 Agent 条目是一份完整契约：能力（含输入/输出 JSON Schema、Token 估算、成功率）、双系统模型配置（System 1 快速响应、System 2 深度推理）、`required_permissions`、`cost_profile`、`trust_metrics` 与 `resource_limits`。由 `schema/agent-registry.schema.json` 校验，契约路径指向 `ecosystem/agents/airymax_agents/*/contract.json`。
+`agent/registry.yaml` 注册了 14 个 Agent（12 个已实现 + 2 个已规划），覆盖多种角色（product_manager、architect、frontend、backend、tester、devops、security、data_engineer、coordinator、reviewer、analyst，以及自定义模板）。每个 Agent 条目是一份完整契约：能力（含输入/输出 JSON Schema、Token 估算、成功率）、双系统模型配置（System 1 快速响应、System 2 深度推理）、`required_permissions`、`cost_profile`、`trust_metrics` 与 `resource_limits`。由 `schema/agent-registry.schema.json` 校验，契约路径指向 `ecosystem/agents/airymax_agents/*/contract.json`。
 
 ### 3. 环境管理（`environment/`）
 
@@ -202,7 +202,7 @@ CI 定义在 `.github/workflows/ci.yml`，每次推送时运行 Schema 校验、
 
 ## 分支策略
 
-本叶子仓位于 **`feature/official-hubs-01`** 分支（活跃开发）。聚合它的管理仓保持在 `main`。
+本叶子仓位于 **`develop/hubs-01`** 分支（活跃开发）。聚合它的管理仓保持在 `main`。
 
 ## 许可证
 
