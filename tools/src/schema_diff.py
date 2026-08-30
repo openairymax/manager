@@ -7,9 +7,11 @@ field inconsistencies, schema drift, and missing configurations.
 
 Part of P1.15: Manager Schema ↔ agentrt.yaml bidirectional sync.
 
-Usage:
-    python3 -m ecosystem.manager.schema_diff [--report] [--check]
-    python3 -m ecosystem.manager.schema_diff --json   # CI-compatible JSON output
+Usage (standalone leaf repo):
+    python3 -m manager.tools.src.schema_diff [--report] [--check]
+    python3 -m manager.tools.src.schema_diff --json   # CI-compatible JSON output
+Usage (aggregate umbrella checkout):
+    python3 -m ecosystem.manager.tools.src.schema_diff [--report] [--check]
 
 Exit codes:
     0 = all schemas consistent
