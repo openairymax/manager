@@ -263,8 +263,8 @@ class TestSchemaDiffer:
 
         differ = SchemaDiffer(agentrt_root=str(tmp_path))
         report = differ._check_schema_files_exist()
-        # All 11 expected schema files are missing
-        assert report.summary["error"] == 11
+        # All 12 expected schema files are missing
+        assert report.summary["error"] == 12
 
     def test_check_schema_files_exist_all_present(self, tmp_path):
         schema_dir = tmp_path / "ecosystem" / "manager" / "schema"
@@ -282,6 +282,7 @@ class TestSchemaDiffer:
             "config-management.schema.json",
             "config-audit-log.schema.json",
             "sanitizer-rules.schema.json",
+            "plugin-manifest.schema.json",
         ]
         for name in expected:
             (schema_dir / name).write_text("{}")
@@ -289,4 +290,4 @@ class TestSchemaDiffer:
         differ = SchemaDiffer(agentrt_root=str(tmp_path))
         report = differ._check_schema_files_exist()
         assert report.summary["error"] == 0
-        assert report.summary["ok"] == 11
+        assert report.summary["ok"] == 12
