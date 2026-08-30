@@ -84,13 +84,17 @@ class TestContractPathExistence:
             cp = entry.get("contract_path")
             if not cp:
                 continue
-            # 权威路径基于 ecosystem/ 仓根；回退基于伞仓根（agent-workload 前缀）
-            candidate = _ECOSYSTEM_DIR / cp
-            if not candidate.exists():
-                candidate2 = _ECOSYSTEM_DIR.parent / cp
-                if candidate2.exists():
-                    continue
-            if not candidate.exists():
+            # 三种布局候选（P2-1 独立组装兼容）：
+            #  1) 伞仓内 <ecosystem>/<cp>             （cp 以 ecosystem/ 开头）
+            #  2) 伞仓根 <ecosystem 父目录>/<cp>        （monorepo 相对路径）
+            #  3) 独立组装 <assembly>/<cp 去 ecosystem/ 前缀>（agents 并列子仓）
+            stripped = cp[len("ecosystem/"):] if cp.startswith("ecosystem/") else cp
+            candidates = (
+                _ECOSYSTEM_DIR / cp,
+                _ECOSYSTEM_DIR.parent / cp,
+                _ECOSYSTEM_DIR / stripped,
+            )
+            if not any(c.exists() for c in candidates):
                 missing.append(f"{entry.get('agent_id')}: {cp}")
         assert not missing, "悬空 contract_path:\n" + "\n".join(missing)
 
