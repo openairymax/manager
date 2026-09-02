@@ -38,7 +38,7 @@ schema/
 | `kernel-settings.schema.json` | 内核级配置（内存/调度/并发限制） | `kernel/settings.yaml` |
 | `logging.schema.json` | 日志配置（级别/格式/输出目标） | `logging/manager.yaml` |
 | `model.schema.json` | 模型配置（Provider/参数/上下文窗口） | `model/model.yaml` |
-| `plugin-manifest.schema.json` | 插件 Manifest 格式（plugin_d 加载校验） | `ecosystem/skills/plugins/*/manifest.yaml` |
+| `plugin-manifest.schema.json` | 插件 Manifest 格式（tool_d 加载校验；M4 吸收 plugin_d） | `ecosystem/skills/plugins/*/manifest.yaml` |
 | `sanitizer-rules.schema.json` | 输入清洗配置（XSS/SQL 注入规则） | `sanitizer/sanitizer_rules.json` |
 | `security-policy.schema.json` | 安全配置（认证/授权/沙箱隔离） | `security/policy.yaml` |
 | `skill-registry.schema.json` | 技能配置与管理 | `skill/registry.yaml` |
