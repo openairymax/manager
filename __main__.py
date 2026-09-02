@@ -221,7 +221,7 @@ def health_check_daemon(airy_home: Path, name: str) -> Dict[str, Any]:
         return result
     payload = resp.get("result", {})
     # 兼容两种健康响应：{"healthy": bool}（channel_d 等）或
-    # {"status": "ok", ...}（info_d/notify_d/observe_d 等）
+    # {"status": "ok", ...}（notify_d 等）
     healthy = bool(payload.get("healthy", payload.get("status") == "ok"))
     result["status"] = "UP" if healthy else "DOWN"
     result["service"] = payload.get("service", name)

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agentrt.spharx.ai/schemas/plugin-manifest-v1.schema.json",
   "title": "AgentRT Plugin Manifest Schema",
-  "description": "Manifest schema for AgentRT ecosystem plugins (ecosystem/skills/plugins/*/manifest.yaml). 0.1.6 生态 SSoT（S-4）：必填约束与 plugin_d/plugin_discovery.c 解析校验对齐。",
+  "description": "Manifest schema for AgentRT ecosystem plugins (ecosystem/skills/plugins/*/manifest.yaml). 0.1.6 生态 SSoT（S-4）：必填约束与 tool_d/plugin_discovery.c 解析校验对齐。",
   "type": "object",
   "required": [
     "name",
