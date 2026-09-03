@@ -5,7 +5,7 @@
 
 **语言:** [English](README.md) | 简体中文
 
-[![Version](https://img.shields.io/badge/version-0.1.1-5a6b7e)](https://atomgit.com/openairymax/manager)
+[![Version](https://img.shields.io/badge/version-0.1.9-5a6b7e)](https://atomgit.com/openairymax/manager)
 [![License](https://img.shields.io/badge/license-AGPL--3.0+Apache--2.0-4a90d9)](LICENSE)
 [![Branch](https://img.shields.io/badge/branch-develop%2Fhubs--01-6f7b8e)](https://atomgit.com/openairymax/manager)
 
@@ -17,7 +17,7 @@
 
 `ecosystem/manager/` 是 Airymax AI Agent 运行时平台的**统一配置与生命周期管理中心**，是 AgentRT 运行时、构建工具链、可观测性体系以及各守护进程所消费的全部配置的唯一真相源（Single Source of Truth）。本仓承担三项核心管理职责——**技能管理**、**Agent 管理**与**环境管理**——同时负责 Schema 校验、Sanitizer 抑制、安全策略与部署模板。
 
-整个模块采用 **Schema 驱动**：任何 YAML / JSON 配置生效前必须通过 JSON Schema 校验，所有变更均记录在审计日志中。本仓维护 `skill/registry.yaml`（10 个注册技能）、`agent/registry.yaml`（12 个注册 Agent，含能力定义、双系统模型、RBAC 权限、成本画像与信任指标）以及 `environment/{development,staging,production}.yaml` 覆盖层，这些覆盖层合并到基础配置 `configs/agentrt.yaml`（v0.1.1）之上。
+整个模块采用 **Schema 驱动**：任何 YAML / JSON 配置生效前必须通过 JSON Schema 校验，所有变更均记录在审计日志中。本仓维护 `skill/registry.yaml`（10 个注册技能）、`agent/registry.yaml`（12 个注册 Agent，含能力定义、双系统模型、RBAC 权限、成本画像与信任指标）以及 `environment/{development,staging,production}.yaml` 覆盖层，这些覆盖层合并到基础配置 `configs/agentrt.yaml`（schema 0.1.5）之上。
 
 在生态层中，`manager/` 处于基础位置：**不依赖任何上游 Airymax 仓**（它是配置根），下游被 AgentRT 运行时、构建工具链、Cupolas 安全模块、`tool_d` 守护进程、CI/CD 流水线与运维人员消费。正是它让生态中的其他组件可复现、可校验、可审计。
 
@@ -51,7 +51,7 @@ manager/
 ├── skill/                             # 技能注册表（registry.yaml — 15 个技能）
 ├── service/                           # 守护进程配置（tool_d/tool.yaml）
 ├── configs/                           # 部署配置模板
-│   ├── agentrt.yaml                   # AgentRT 运行时统一配置（v0.1.1）
+│   ├── agentrt.yaml                   # AgentRT 运行时统一配置（schema 0.1.5）
 │   └── env.example                    # 环境变量模板
 ├── environment/                       # 环境覆盖层（development / staging / production）
 ├── deployment/                        # 部署配置（cupolas、manager_management、example）
@@ -95,7 +95,7 @@ manager/
 
 ### 6. 统一运行时配置（`configs/agentrt.yaml`）
 
-v0.1.1 的 AgentRT 统一运行时配置，覆盖：`kernel`（IPC、调度器、内存、定时器、错误）、`llm`（运行时策略：成本感知路由 fallback 链、日预算、缓存；提供商与模型定义收敛至 `model/model.yaml` 单一来源）、`memory`（L1–L4 分层记忆）、`security`（Cupolas、沙箱、RBAC、审计）、`multi_agent`（A2A、协作模式、lanes）、`gateway`（HTTP、WebSocket、MCP、A2A、OpenAI 兼容）、`hooks`、`plugins` 与 `observability`（指标、链路追踪、日志、健康检查）。
+AgentRT 统一运行时配置（schema 0.1.5），覆盖：`kernel`（IPC、调度器、内存、定时器、错误）、`llm`（运行时策略：成本感知路由 fallback 链、日预算、缓存；提供商与模型定义收敛至 `model/model.yaml` 单一来源）、`memory`（L1–L4 分层记忆）、`security`（Cupolas、沙箱、RBAC、审计）、`multi_agent`（A2A、协作模式、lanes）、`gateway`（HTTP、WebSocket、MCP、A2A、OpenAI 兼容）、`hooks`、`plugins` 与 `observability`（指标、链路追踪、日志、健康检查）。
 
 > **LLM 配置 SSoT（0.1.1 收敛）**：`agentrt.yaml` 的 `llm` 段仅保留**运行时策略**（routing fallback_chain / cost_budget / cache）；`providers` 与 `models` 定义以 [`model/model.yaml`](model/README.md)（同源 `model.json`）为**唯一真相源**，由 `llm_d` 经 `-c <config>` 加载。模型与策略分离，避免双源漂移。
 

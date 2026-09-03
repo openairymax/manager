@@ -5,7 +5,7 @@
 
 **Language:** English | [简体中文](README_zh.md)
 
-[![Version](https://img.shields.io/badge/version-0.1.1-5a6b7e)](https://atomgit.com/openairymax/manager)
+[![Version](https://img.shields.io/badge/version-0.1.9-5a6b7e)](https://atomgit.com/openairymax/manager)
 [![License](https://img.shields.io/badge/license-AGPL--3.0+Apache--2.0-4a90d9)](LICENSE)
 [![Branch](https://img.shields.io/badge/branch-develop%2Fhubs--01-6f7b8e)](https://atomgit.com/openairymax/manager)
 
@@ -17,7 +17,7 @@
 
 `ecosystem/manager/` is the **unified configuration and lifecycle management center** of the Airymax AI Agent Runtime Platform. It is the single source of truth for every configuration consumed by the AgentRT runtime, the build toolchain, the observability stack and the surrounding daemons. The repository owns three core management responsibilities — **skill management**, **agent management** and **environment management** — alongside schema validation, sanitizer suppressions, security policy and deployment templates.
 
-The repository is **schema-driven**: every YAML / JSON file is validated against a JSON Schema before it is allowed to take effect, and every change is captured in an auditable audit log. It maintains `skill/registry.yaml` (15 registered skills), `agent/registry.yaml` (14 registered agents — 12 implemented + 2 planned — with capabilities, dual-system models, RBAC permissions, cost profiles and trust metrics) and `environment/{development,staging,production}.yaml` overlays that are merged on top of the base `configs/agentrt.yaml` (v0.1.1).
+The repository is **schema-driven**: every YAML / JSON file is validated against a JSON Schema before it is allowed to take effect, and every change is captured in an auditable audit log. It maintains `skill/registry.yaml` (15 registered skills), `agent/registry.yaml` (14 registered agents — 12 implemented + 2 planned — with capabilities, dual-system models, RBAC permissions, cost profiles and trust metrics) and `environment/{development,staging,production}.yaml` overlays that are merged on top of the base `configs/agentrt.yaml` (schema 0.1.5).
 
 Within the ecosystem layer, `manager/` sits at the foundation: it has **no upstream Airymax repository dependency** (it is the configuration root), and is consumed downstream by the AgentRT runtime, the build toolchain, the Cupolas security module, the `tool_d` daemon, CI/CD pipelines and operators. It is what makes every other ecosystem component reproducible, validated and auditable.
 
@@ -51,7 +51,7 @@ manager/
 ├── skill/                             # Skill registry (registry.yaml — 10 skills)
 ├── service/                           # Daemon configuration (tool_d/tool.yaml)
 ├── configs/                           # Deployment configuration templates
-│   ├── agentrt.yaml                   # Unified AgentRT runtime configuration (v0.1.1)
+│   ├── agentrt.yaml                   # Unified AgentRT runtime configuration (schema 0.1.5)
 │   └── env.example                    # Environment variable template
 ├── environment/                       # Environment overlays (development / staging / production)
 ├── deployment/                        # Deployment configuration (cupolas, manager_management, example)
@@ -95,7 +95,7 @@ Two responsibilities: (a) build-time suppression files (`lsan-suppressions`, `va
 
 ### 6. Unified Runtime Config (`configs/agentrt.yaml`)
 
-The v0.1.1 unified AgentRT runtime configuration covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (runtime policy: cost-aware routing fallback chain, daily budget, cache; provider/model definitions consolidated to `model/model.yaml` as the single source), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
+The unified AgentRT runtime configuration (schema 0.1.5) covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (runtime policy: cost-aware routing fallback chain, daily budget, cache; provider/model definitions consolidated to `model/model.yaml` as the single source), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
 
 > **LLM config SSoT (0.1.1 consolidation)**: the `llm` section in `agentrt.yaml` keeps only **runtime policy** (routing fallback_chain / cost_budget / cache); `providers` and `models` definitions live in [`model/model.yaml`](model/README.md) (kept in sync with `model.json`) as the **single source of truth**, loaded by `llm_d` via `-c <config>`. Model and policy are separated to avoid dual-source drift.
 
