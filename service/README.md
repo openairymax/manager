@@ -1,7 +1,7 @@
 # Manager Service — 服务配置
 
 **模块路径**: `ecosystem/manager/service/`
-**版本**: v0.1.1
+**版本**: v0.1.9（随 Manager 仓库）
 
 ## 概述
 

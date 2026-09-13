@@ -1,7 +1,7 @@
 # Manager Agent — Agent 注册表配置
 
 **模块路径**: `ecosystem/manager/agent/`
-**版本**: v0.1.1
+**版本**: v1.1.0（registry.yaml 配置版本）
 
 ## 概述
 
@@ -11,7 +11,7 @@
 
 ```
 agent/
-└── registry.yaml          # Agent 注册表定义（12 个内置 Agent + 1 个自定义模板）
+└── registry.yaml          # Agent 注册表定义（14 个 Agent：12 个已实现 + 2 个已规划）
 ```
 
 ## 核心组件
@@ -32,7 +32,7 @@ Agent 注册表，每个 Agent 包含以下字段：
 | `trust_metrics` | 信任指标（trust_score/reliability_score/quality_score/security_score） |
 | `resource_limits` | 资源限制（memory/cpu/timeout/concurrent_tasks） |
 
-## 内置 Agent 列表
+## 注册 Agent 列表
 
 | Agent ID | 角色 | 核心能力 |
 |----------|------|----------|
@@ -44,11 +44,12 @@ Agent 注册表，每个 Agent 包含以下字段：
 | `devops_v1` | DevOps | 部署、CI/CD、监控、基础设施管理 |
 | `security_v1` | 安全审计 | 安全审计、漏洞检测、合规检查、渗透测试 |
 | `data_engineer_v1` | 数据工程师 | 数据管道、ETL 开发、数据建模、数据分析 |
-| `coordinator_v1` | 协调者 | 任务协调、资源分配、冲突解决、进度跟踪 |
+| `coordinator_v1` | 协调者 | 任务协调、资源分配、冲突解决、进度跟踪（默认禁用，规划中） |
 | `reviewer_v1` | 代码审查 | 代码审查、最佳实践、重构建议、文档审查 |
 | `analyst_v1` | 分析师 | 数据分析、趋势检测、报告生成、数据可视化 |
 | `coding_v1` | 编码开发 | 代码生成、代码重构、缺陷修复 |
-| `custom_template_v1` | 自定义模板 | 可配置的自定义 Agent（默认禁用） |
+| `coding_rs_v1` | 编码开发（Rust 实现） | 代码生成、代码解释、代码重构（Rust 实现，LLM 驱动） |
+| `custom_template_v1` | 自定义模板 | 可配置的自定义 Agent（默认禁用，规划中） |
 
 ## 依赖关系
 

@@ -1,11 +1,11 @@
 # Manager 测试套件
 
 **模块路径**: `ecosystem/manager/tests/`
-**版本**: v0.1.1
+**版本**: v0.1.9（随 Manager 仓库）
 
 ## 概述
 
-`manager/tests/` 包含 Manager 模块的测试套件，覆盖配置一致性（配置漂移检测铁律）、`tools/` 工具集的单元测试与集成测试。测试套件遵循 00-architectural-principles.md 的 **E-8 可测试性原则**，通过 pytest 运行。
+`manager/tests/` 包含 Manager 模块的测试套件，覆盖配置一致性（配置漂移检测铁律）、注册表一致性、`tools/` 工具集的单元测试与集成测试。测试套件通过 pytest 运行。
 
 ## 目录结构
 
@@ -16,6 +16,8 @@ tests/
 ├── test_config_diff.py        # tools/src/config_diff.py 单元测试
 ├── test_schema_diff.py        # tools/src/schema_diff.py 单元测试
 ├── test_tools.py              # tools/ 工具集成测试（audit_log_generator / drift_detector / config_version_cleanup）
+├── test_agent_registry_consistency.py # Agent 注册表一致性测试（registry.yaml ↔ agents.yaml）
+├── test_skill_registry_consistency.py # 技能注册表一致性测试（registry.yaml ↔ skills/definitions/）
 └── README.md                  # 本文件
 ```
 
@@ -51,7 +53,7 @@ tests/
 `tools/src/schema_diff.py` 的单元测试：
 
 - `DiffSeverity` / `DiffEntry` / `DiffReport` 数据结构
-- `SchemaDiffer`：11 个 Schema 文件与 `agentrt.yaml` 的双向一致性检查
+- `SchemaDiffer`：各 Schema 文件与 `agentrt.yaml` 的双向一致性检查
 
 ### 5. 工具集成测试 (`test_tools.py`)
 
@@ -60,6 +62,23 @@ tests/
 - **审计日志生成器**：`ActionType`（LOAD/RELOAD/CHANGE/ROLLBACK/VALIDATE/EXPORT/IMPORT）、`OperatorType`（user/system/ci_cd）、`AuditLogEntry` / `AuditLogGenerator` 生成与导出
 - **配置漂移检测器**：`DriftSeverity` / `DriftType` / `DriftReport`、`ConfigDriftDetector` 的基线创建、漂移检测、严重程度分级与报告导出
 - **版本历史清理**：`VersionInfo` / `CleanupResult` / `ConfigVersionCleanup` 清理逻辑与 `format_bytes`
+
+### 6. Agent 注册表一致性测试 (`test_agent_registry_consistency.py`)
+
+守护 `agent/registry.yaml` 与权威 Agent 清单 `ecosystem/agents/registry/agents.yaml` 的一致性：
+
+- A1：两侧 `agent_id` 集合一致，且注册 Agent 总数为 14
+- A2：基础字段（role / source / version / enabled）逐项一致
+- A3：`contract_path` 指向的契约文件真实存在
+- A4：计数元数据（total / implemented / planned agents）一致
+
+### 7. 技能注册表一致性测试 (`test_skill_registry_consistency.py`)
+
+守护 `skill/registry.yaml` 与 skills 叶子仓 `skills/definitions/` 目录的一致性：
+
+- S1：`source: skills` 的注册条目与 `skills/definitions/` 下的技能定义一一对应
+- S2：`contract_path` 指向的契约文件真实存在
+- S3：`source` 取值合法（builtin / community / skills），社区技能默认禁用
 
 ## 使用方式
 
@@ -72,6 +91,8 @@ python -m pytest tests/test_config_diff.py
 python -m pytest tests/test_schema_diff.py
 python -m pytest tests/test_tools.py
 python -m pytest tests/test_config_consistency.py
+python -m pytest tests/test_agent_registry_consistency.py
+python -m pytest tests/test_skill_registry_consistency.py
 
 # 生成 HTML 测试报告
 python -m pytest --html=report.html tests/

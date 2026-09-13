@@ -7,9 +7,8 @@
 
 [![Version](https://img.shields.io/badge/version-0.1.9-5a6b7e)](https://atomgit.com/openairymax/manager)
 [![License](https://img.shields.io/badge/license-AGPL--3.0+Apache--2.0-4a90d9)](LICENSE)
-[![Branch](https://img.shields.io/badge/branch-develop%2Fhubs--01-6f7b8e)](https://atomgit.com/openairymax/manager)
 
-**Repository:** `git@atomgit.com:openairymax/manager.git` · **Branch:** `develop/hubs-01`
+**Repository:** `git@atomgit.com:openairymax/manager.git`
 
 ---
 
@@ -25,7 +24,7 @@ Within the ecosystem layer, `manager/` sits at the foundation: it has **no upstr
 
 ```
 manager/
-├── schema/                            # JSON Schema definitions (11 files, ~272 rules)
+├── schema/                            # JSON Schema definitions (12 files)
 │   ├── _metadata.schema.json          # Schema metadata & versioning
 │   ├── agent-registry.schema.json     # Agent registry
 │   ├── config-audit-log.schema.json   # Configuration audit log
@@ -33,22 +32,23 @@ manager/
 │   ├── kernel-settings.schema.json    # Kernel settings
 │   ├── logging.schema.json            # Logging configuration
 │   ├── model.schema.json              # Model configuration
+│   ├── plugin-manifest.schema.json    # Plugin manifest
 │   ├── sanitizer-rules.schema.json    # Sanitizer rules
 │   ├── security-policy.schema.json    # Security policy
 │   ├── skill-registry.schema.json     # Skill registry
 │   └── tool-service.schema.json       # tool_d service
 ├── sanitizer/                         # Sanitizer suppressions + input rules
-│   ├── sanitizer_rules.json           # 25 input rules across 7 attack categories
+│   ├── sanitizer_rules.json           # 26 input rules (25 enabled) across 8 attack categories
 │   ├── lsan-suppressions              # LeakSanitizer suppression file
 │   └── valgrind-suppressions          # Valgrind suppression file
 ├── security/                          # Security policy & RBAC
 │   └── policy.yaml                    # Default policy, sandbox, audit, intrusion detection
-│                                      # (tool ACL runtime template: tools/scripts/ops/templates)
+│                                      # (tool ACL runtime template: see security/README.md)
 ├── kernel/                            # Kernel configuration (kernel.yaml, settings.yaml)
 ├── model/                             # LLM model configuration (model.yaml, model.json)
 ├── logging/                           # Logging configuration (manager.yaml)
-├── agent/                             # Agent registry (registry.yaml — 12 agents)
-├── skill/                             # Skill registry (registry.yaml — 10 skills)
+├── agent/                             # Agent registry (registry.yaml — 14 agents)
+├── skill/                             # Skill registry (registry.yaml — 15 skills)
 ├── service/                           # Daemon configuration (tool_d/tool.yaml)
 ├── configs/                           # Deployment configuration templates
 │   ├── agentrt.yaml                   # Unified AgentRT runtime configuration (schema 0.1.5)
@@ -69,11 +69,11 @@ manager/
 
 ### 1. Skill Management (`skill/`)
 
-`skill/registry.yaml` is the authoritative registry of every skill available to the runtime. Each entry declares `skill_id`, version, `unit_type` (`file` / `shell` / `api` / `code` / `db` / `browser` / `tool`), required permissions, dependencies, compatibility (min/max AgentRT version, platforms), resource limits and rate limits. 10 builtin skills are registered: `filesystem_skill`, `shell_skill`, `http_skill`, `python_skill`, `javascript_skill`, `database_skill`, `browser_skill`, `git_skill`, `vector_search_skill`, `log_analysis_skill`. Validated against `schema/skill-registry.schema.json`.
+`skill/registry.yaml` is the authoritative registry of every skill available to the runtime. Each entry declares `skill_id`, version, `unit_type` (`file` / `shell` / `api` / `code` / `db` / `browser` / `tool`), required permissions, dependencies, compatibility (min/max AgentRT version, platforms), resource limits and rate limits. 15 skills are registered: 8 builtin skills (`filesystem_skill`, `shell_skill`, `http_skill`, `python_skill`, `javascript_skill`, `git_skill`, `vector_search_skill`, `log_analysis_skill`), 2 community skills (`database_skill`, `browser_skill`) and 5 official skills sourced from the skills leaf repository (`code_review`, `data_analysis`, `security_audit`, `text_summarization`, `web_search`). Validated against `schema/skill-registry.schema.json`.
 
 ### 2. Agent Management (`agent/`)
 
-`agent/registry.yaml` registers 12 agents across roles (product_manager, architect, frontend, backend, tester, devops, security, data_engineer, coordinator, reviewer, analyst, plus a custom template). Each agent entry is a full contract: capabilities (with input/output JSON Schema, token estimates, success rate), a dual-system model configuration (System 1 for fast response, System 2 for deep reasoning), `required_permissions`, `cost_profile`, `trust_metrics` and `resource_limits`. Validated against `schema/agent-registry.schema.json`; contract paths point at `ecosystem/agents/airymax_agents/*/contract.json`.
+`agent/registry.yaml` registers 14 agents — 12 implemented + 2 planned — across roles (product_manager, architect, frontend, backend, tester, devops, security, data_engineer, coordinator [planned], reviewer, analyst, custom_template [planned], coding [Python], coding_rs [Rust]). Each agent entry is a full contract: capabilities (with input/output JSON Schema, token estimates, success rate), a dual-system model configuration (System 1 for fast response, System 2 for deep reasoning), `required_permissions`, `cost_profile`, `trust_metrics` and `resource_limits`. Validated against `schema/agent-registry.schema.json`; contract paths point at `ecosystem/agents/airymax_agents/*/contract.json`.
 
 ### 3. Environment Management (`environment/`)
 
@@ -87,17 +87,17 @@ Three overlay files — `development.yaml`, `staging.yaml`, `production.yaml` �
 
 ### 4. Schema Validation (`schema/`)
 
-11 JSON Schema files (~272 validation rules) covering every configuration domain — kernel, model, security, sanitizer, logging, agent/skill registries, tool service, audit log and manager self-management. Every config file references its schema via the `_schema` key and is rejected unless it validates.
+12 JSON Schema files covering every configuration domain — kernel, model, security, sanitizer, logging, agent/skill registries, plugin manifest, tool service, audit log and manager self-management. Every config file references its schema via the `_schema` key and is rejected unless it validates.
 
 ### 5. Sanitizer (`sanitizer/`)
 
-Two responsibilities: (a) build-time suppression files (`lsan-suppressions`, `valgrind-suppressions`) that silence known third-party false positives during AddressSanitizer / LeakSanitizer / Valgrind runs; (b) runtime input-sanitization rules (`sanitizer_rules.json`) covering 7 attack categories (XSS, SQL injection, prompt injection, PII, path traversal, command injection, SSRF). Co-owned with the Cupolas security module under a dual-responsibility model.
+Two responsibilities: (a) build-time suppression files (`lsan-suppressions`, `valgrind-suppressions`) that silence known third-party false positives during AddressSanitizer / LeakSanitizer / Valgrind runs; (b) runtime input-sanitization rules (`sanitizer_rules.json`) with 26 rules (25 enabled by default) across 8 attack categories (XSS, SQL injection, prompt injection, PII, path traversal, command injection, sensitive data, malware). Co-owned with the Cupolas security module under a dual-responsibility model.
 
 ### 6. Unified Runtime Config (`configs/agentrt.yaml`)
 
-The unified AgentRT runtime configuration (schema 0.1.5) covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (runtime policy: cost-aware routing fallback chain, daily budget, cache; provider/model definitions consolidated to `model/model.yaml` as the single source), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
+The unified AgentRT runtime configuration (schema 0.1.5) covering: `kernel` (IPC, scheduler, memory, timer, error), `llm` (runtime policy: cost-aware routing fallback chain, daily budget, cache; model definitions consolidated to `model/model.yaml` as the single source), `memory` (L1–L4 layered memory), `security` (Cupolas, sandbox, RBAC, audit), `multi_agent` (A2A, collaboration patterns, lanes), `gateway` (HTTP, WebSocket, MCP, A2A, OpenAI-compat), `hooks`, `plugins` and `observability` (metrics, tracing, logging, health).
 
-> **LLM config SSoT (0.1.1 consolidation)**: the `llm` section in `agentrt.yaml` keeps only **runtime policy** (routing fallback_chain / cost_budget / cache); `providers` and `models` definitions live in [`model/model.yaml`](model/README.md) (kept in sync with `model.json`) as the **single source of truth**, loaded by `llm_d` via `-c <config>`. Model and policy are separated to avoid dual-source drift.
+> **LLM config SSoT**: the `llm` section in `agentrt.yaml` keeps only **runtime policy** (routing fallback_chain / cost_budget / cache); model definitions live in [`model/model.yaml`](model/README.md) (kept in sync with `model.json`) as the **single source of truth**, loaded by `llm_d` via `-c <config>`. Model and policy are separated to avoid dual-source drift.
 
 ### 7. Operations Toolset (`tools/`)
 
@@ -121,7 +121,7 @@ The unified AgentRT runtime configuration (schema 0.1.5) covering: `kernel` (IPC
 |----------|------------------------|
 | **AgentRT runtime** | Reads `configs/agentrt.yaml` and environment overlays at startup; loads `security/`, `kernel/`, `model/`, `logging/` settings at runtime |
 | **AgentRT build toolchain** | Uses `sanitizer/lsan-suppressions` and `sanitizer/valgrind-suppressions` at **build / test time** to silence known third-party false positives |
-| **Cupolas security module** | Co-owns `sanitizer/` and `security/` content under the dual-responsibility model; consumes `security/policy.yaml` (runtime tool ACL template is in tools/scripts/ops/templates, SSoT) |
+| **Cupolas security module** | Co-owns `sanitizer/` and `security/` content under the dual-responsibility model; consumes `security/policy.yaml` (tool ACL details in [security/README.md](security/README.md)) |
 | **tool_d daemon** | Reads `service/tool_d/tool.yaml` (validated by `tool-service.schema.json`) |
 | **Agent & skill registries** | Runtime resolves agents/skills from `agent/registry.yaml` and `skill/registry.yaml`; agent contract paths point into `ecosystem/agents/airymax_agents/` |
 | **CI / CD pipelines** | Run `tools/drift_detector.py` and `tools/config_diff.py` as configuration validation gates |
@@ -199,10 +199,6 @@ python tools/src/schema_diff.py --help
 ```
 
 CI is defined in `.github/workflows/ci.yml` and runs schema validation, drift detection and the test suite on every push.
-
-## Branch Strategy
-
-This leaf repository is on the **`develop/hubs-01`** branch (active development). The management repository that aggregates it stays on `main`.
 
 ## License
 

@@ -1,7 +1,7 @@
 # Manager Kernel — 内核级配置
 
 **模块路径**: `ecosystem/manager/kernel/`
-**版本**: v0.1.1
+**版本**: v0.1.9（随 Manager 仓库）
 
 ## 概述
 

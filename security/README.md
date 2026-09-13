@@ -1,7 +1,7 @@
 # Manager Security — 安全策略与权限配置
 
 **模块路径**: `ecosystem/manager/security/`
-**版本**: v0.1.1
+**版本**: v1.0.0（policy.yaml 配置版本）
 
 ## 概述
 
@@ -43,13 +43,11 @@ security/
 
 ### 工具权限规则（SSoT 边界）
 
-运行时工具级 ACL（tool_d/agent_d 加载的 `rules: [{agent, tool, effect}]`
-格式）**不在此目录维护**——权威模板为 tools 仓
-`scripts/ops/templates/permission_rules.yaml`（v1.1.0），经 install.sh 部署到
-`$AIRY_HOME/config/cupolas/permission_rules.yaml`。本目录历史上的
-`permission_rules.yaml`（v1.0.0，action/resource 旧格式）与运行时 schema
-不兼容，已于 2026-08-28 删除，避免同名异格式误导。安全策略的治理入口为
-本目录 `policy.yaml`。
+运行时工具级 ACL（`tool_d` / `agent_d` 加载的 `rules: [{agent, tool, effect}]`
+格式）**不在此目录维护**：其权威定义由 cupolas 内容模块负责，经部署流程下发到
+运行时配置目录 `$AIRY_HOME/config/cupolas/permission_rules.yaml`。本目录的
+治理入口为 `policy.yaml`，负责资源级权限规则与安全策略；两类配置的格式与
+职责不同，请勿混用。
 
 ## 依赖关系
 

@@ -1,7 +1,7 @@
 # Manager 性能基准测试
 
 **模块路径**: `ecosystem/manager/benchmark/`
-**版本**: v0.1.1
+**版本**: v0.1.9（随 Manager 仓库）
 
 ## 概述
 

@@ -1,7 +1,7 @@
 # Manager 配置工具集
 
 **模块路径**: `ecosystem/manager/tools/`
-**版本**: v0.1.1
+**版本**: v0.1.9（随 Manager 仓库）
 
 ## 概述
 
@@ -12,6 +12,7 @@
 ```
 tools/
 ├── src/                        # 工具实现
+│   ├── __init__.py             # 包初始化
 │   ├── config_diff.py          # 配置差异对比工具
 │   ├── config_version_cleanup.py   # 版本历史清理工具
 │   ├── drift_detector.py       # 配置漂移检测器
@@ -67,7 +68,7 @@ python config_version_cleanup.py --dry-run
 - 基于 SHA-256 哈希的文件完整性校验
 - 三种漂移类型：MODIFIED / DELETED / ADDED
 - 三级严重程度：INFO / WARNING / CRITICAL
-- 敏感文件自动标记为 CRITICAL（security/、kernel/、model/）
+- 敏感文件自动标记为 CRITICAL（security/policy.yaml、model/model.yaml、kernel/settings.yaml、manager_management.yaml）
 - 支持 JSON 和 Markdown 格式报告导出
 - 支持 `--fail-on-drift` 退出码，便于 CI/CD 集成
 
@@ -76,7 +77,6 @@ python config_version_cleanup.py --dry-run
 | 文件 | 严重程度 |
 |------|---------|
 | `security/policy.yaml` | CRITICAL |
-| `security/permission_rules.yaml` | CRITICAL |
 | `model/model.yaml` | CRITICAL |
 | `kernel/settings.yaml` | CRITICAL |
 | `manager_management.yaml` | CRITICAL |
@@ -116,7 +116,7 @@ python drift_detector.py --action detect --output report.json --output-md report
 | `--config-dir` | `../manager` | 配置目录路径 |
 | `--action` | `both` | 操作类型：create-baseline / detect / both |
 | `--output` | `drift_report.json` | JSON 报告输出路径 |
-| `--output-md` | 自动生成 | Markdown 报告输出路径 |
+| `--output-md` | 无（可选） | Markdown 报告输出路径 |
 | `--verbose` / `-v` | false | 详细输出 |
 | `--fail-on-drift` | false | 检测到漂移时返回退出码 1 |
 
@@ -207,7 +207,7 @@ generator.export_to_json(entries, Path("audit_log.json"))
 
 ### 5. Schema 差异比对 (`schema_diff.py`)
 
-比对 Manager 的 11 个 Schema 文件与 `agentrt.yaml`，检测字段不一致、Schema 漂移与缺失配置（P1.15 Manager Schema ↔ agentrt.yaml 双向同步）。
+比对 Manager 的各 Schema 文件与 `agentrt.yaml`，检测字段不一致、Schema 漂移与缺失配置。
 
 ```bash
 # 生成差异报告（默认文本输出）
@@ -241,8 +241,8 @@ print(f"Has errors: {report.has_errors()}")
 config-validation:
   stage: validate
   script:
-    - python manager/tools/config_diff.py config.json config.new.json
-    - python manager/tools/drift_detector.py --action detect --fail-on-drift
+    - python manager/tools/src/config_diff.py config.json config.new.json
+    - python manager/tools/src/drift_detector.py --action detect --fail-on-drift
     - python -m pytest manager/tests/ -v
 ```
 
