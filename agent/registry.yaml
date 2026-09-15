@@ -999,13 +999,13 @@ agents:
 
     models:
       system1:
-        model_id: "deepseek-v4-flash"
+        model_id: "deepseek-flash"
         purpose: "快速代码补全、简单修改"
         max_tokens: 4096
         temperature: 0.2
         priority: 1
       system2:
-        model_id: "deepseek-v4-flash"
+        model_id: "deepseek-flash"
         purpose: "复杂编码、设计实现、跨文件修改"
         max_tokens: 8192
         temperature: 0.2
@@ -1145,13 +1145,13 @@ agents:
 
     models:
       system1:
-        model_id: "deepseek-v4-flash"
+        model_id: "deepseek-flash"
         purpose: "快速代码补全、简单修改"
         max_tokens: 4096
         temperature: 0.2
         priority: 1
       system2:
-        model_id: "deepseek-v4-flash"
+        model_id: "deepseek-flash"
         purpose: "复杂编码、设计实现、跨文件修改"
         max_tokens: 8192
         temperature: 0.2

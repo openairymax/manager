@@ -52,15 +52,15 @@ models:
     mode: api
     api_format: openai
     base_url: https://api.deepseek.com
-    model_id: deepseek-chat
+    model_id: deepseek-flash
     api_key_env: MODEL_1_API_KEY
     context_window: 128k
     max_output: 16k
     tool_rounds: 1000
     vision: false
     thinking: auto
-    input_cost_per_1k: 0.00027    # $0.27/M tokens（deepseek-chat 参考价）
-    output_cost_per_1k: 0.0011    # $1.10/M tokens（deepseek-chat 参考价）
+    input_cost_per_1k: 0.00015   # $0.15/M tokens（deepseek-flash 标准时段，未命中缓存）
+    output_cost_per_1k: 0.0006   # $0.60/M tokens（deepseek-flash 标准时段）
 
   - name: GLM
     mode: api
@@ -91,7 +91,7 @@ models:
     output_cost_per_1k: 0.0
 
 # ── 默认模型（必填，须为上方 models 表中某一行的 model_id）───────────────
-default_model: deepseek-chat
+default_model: deepseek-flash
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ★ 双思考系统（Thinkdual / GRAD 批判循环）
