@@ -5,7 +5,7 @@
       "mode": "api",
       "api_format": "openai",
       "base_url": "https://api.deepseek.com",
-      "model_id": "deepseek-chat",
+      "model_id": "deepseek-flash",
       "api_key_env": "MODEL_1_API_KEY",
       "context_window": "128k",
       "max_output": "16k",
@@ -42,7 +42,7 @@
       "output_cost_per_1k": 0.0
     }
   ],
-  "default_model": "deepseek-chat",
+  "default_model": "deepseek-flash",
   "think": {
     "enabled": true,
     "think2_slow_model": "",
