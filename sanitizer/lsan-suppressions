@@ -36,6 +36,5 @@ leak:event_base_free
 leak:config_context_create
 leak:config_source_create_memory
 leak:config_source_create_env
-leak:config_source_create_file
 leak:config_service_create
 leak:stub_alloc
