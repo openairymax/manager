@@ -23,10 +23,6 @@ kernel:
   memory:
     max_alloc_mb: 4096
     oom_watermark_percent: 85
-    arena_default_size_kb: 64
-    pool_thread_cache_max: 256
-    slab_min_objs: 8
-    mempool_reserved_mb: 32
     leak_scan_interval_sec: 60
     soak_test_rss_growth_percent: 5
     sensitive_zero_on_free: true
