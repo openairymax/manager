@@ -162,13 +162,15 @@ class TestAuditLogEntry:
 
 
 class TestAuditLogGenerator:
+    @pytest.fixture(autouse=True)
+    def _gen(self):
+        self.gen = AuditLogGenerator()
+
     def test_init(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        assert gen.config_dir == Path("/tmp/test")
+        assert isinstance(self.gen._file_hashes, dict)
 
     def test_generate_entry_with_all_params(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        entry = gen.generate_entry(
+        entry = self.gen.generate_entry(
             action="CHANGE",
             config_file="kernel/settings.yaml",
             operator_type="user",
@@ -184,104 +186,89 @@ class TestAuditLogGenerator:
         assert entry.metadata.reason == "test change"
 
     def test_generate_entry_random(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        entry = gen.generate_entry()
+        entry = self.gen.generate_entry()
         assert entry.action in [a.value for a in ActionType]
         assert entry.config_file in AuditLogGenerator.CONFIG_FILES
         assert entry.operator.type in [o.value for o in OperatorType]
 
     def test_generate_entry_no_changes(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        entry = gen.generate_entry(action="LOAD", include_changes=False)
+        entry = self.gen.generate_entry(action="LOAD", include_changes=False)
         assert len(entry.changes) == 0
 
     def test_generate_batch(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        entries = gen.generate_batch(count=5, environment="development")
+        entries = self.gen.generate_batch(count=5, environment="development")
         assert len(entries) == 5
         for e in entries:
             assert e.metadata.environment == "development"
 
     def test_generate_batch_first_is_load(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        entries = gen.generate_batch(count=3)
+        entries = self.gen.generate_batch(count=3)
         assert entries[0].action == ActionType.LOAD.value
 
     def test_generate_operator_user(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        op = gen._generate_operator("user")
+        op = self.gen._generate_operator("user")
         assert op.type == "user"
         assert op.identity in AuditLogGenerator.USER_NAMES
         assert op.ip_address is not None
         assert op.session_id is not None
 
     def test_generate_operator_system(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        op = gen._generate_operator("system")
+        op = self.gen._generate_operator("system")
         assert op.type == "system"
         assert op.identity in AuditLogGenerator.SYSTEM_COMPONENTS
 
     def test_generate_operator_ci_cd(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        op = gen._generate_operator("ci_cd")
+        op = self.gen._generate_operator("ci_cd")
         assert op.type == "ci_cd"
         assert op.identity in AuditLogGenerator.CI_CD_SYSTEMS
 
     def test_generate_checksum_stateful(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        cs1 = gen._generate_checksum("kernel/settings.yaml")
-        cs2 = gen._generate_checksum("kernel/settings.yaml")
+        cs1 = self.gen._generate_checksum("kernel/settings.yaml")
+        cs2 = self.gen._generate_checksum("kernel/settings.yaml")
         # after of first becomes before of second
         assert cs2.before == cs1.after
 
     def test_generate_changes_kernel(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        changes = gen._generate_changes("kernel/settings.yaml")
+        changes = self.gen._generate_changes("kernel/settings.yaml")
         assert len(changes) == 1
         assert "kernel" in changes[0].path
 
     def test_generate_changes_model(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        changes = gen._generate_changes("model/model.yaml")
+        changes = self.gen._generate_changes("model/model.yaml")
         assert len(changes) == 1
         assert "model" in changes[0].path
 
     def test_generate_changes_security(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        changes = gen._generate_changes("security/policy.yaml")
+        changes = self.gen._generate_changes("security/policy.yaml")
         assert len(changes) == 1
         assert "security" in changes[0].path
 
     def test_generate_changes_agent(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        changes = gen._generate_changes("agent/registry.yaml")
+        changes = self.gen._generate_changes("agent/registry.yaml")
         assert len(changes) == 1
         assert "agents" in changes[0].path
 
     def test_generate_changes_other(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        changes = gen._generate_changes("logging/manager.yaml")
+        changes = self.gen._generate_changes("logging/manager.yaml")
         assert len(changes) == 1
         assert "config" in changes[0].path
 
     def test_get_source_for_action(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        assert gen._get_source_for_action("LOAD") == "system_startup"
-        assert gen._get_source_for_action("RELOAD") == "file_watcher"
-        assert gen._get_source_for_action("CHANGE") == "manual"
-        assert gen._get_source_for_action("ROLLBACK") == "validation_failure"
-        assert gen._get_source_for_action("VALIDATE") == "periodic_check"
-        assert gen._get_source_for_action("EXPORT") == "manual"
-        assert gen._get_source_for_action("IMPORT") == "deployment_pipeline"
-        assert gen._get_source_for_action("UNKNOWN") == "unknown"
+        assert self.gen._get_source_for_action("LOAD") == "system_startup"
+        assert self.gen._get_source_for_action("RELOAD") == "file_watcher"
+        assert self.gen._get_source_for_action("CHANGE") == "manual"
+        assert self.gen._get_source_for_action("ROLLBACK") == "validation_failure"
+        assert self.gen._get_source_for_action("VALIDATE") == "periodic_check"
+        assert self.gen._get_source_for_action("EXPORT") == "manual"
+        assert self.gen._get_source_for_action("IMPORT") == "deployment_pipeline"
+        assert self.gen._get_source_for_action("UNKNOWN") == "unknown"
 
     def test_export_to_json(self):
-        gen = AuditLogGenerator(Path("/tmp/test"))
-        entry = gen.generate_entry(action="LOAD", config_file="kernel/settings.yaml", include_changes=False)
+        entry = self.gen.generate_entry(action="LOAD", config_file="kernel/settings.yaml", include_changes=False)
         with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
             output_path = Path(f.name)
         try:
-            gen.export_to_json([entry], output_path)
+            self.gen.export_to_json([entry], output_path)
             data = json.loads(output_path.read_text())
             assert len(data) == 1
             assert data[0]["action"] == "LOAD"

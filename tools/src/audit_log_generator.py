@@ -5,7 +5,7 @@ AgentRT Config Audit Log Generator
 用于生成测试用的配置变更审计日志，符合config-audit-log.schema.json规范
 
 Usage:
-    python audit_log_generator.py --config-dir ../ --output sample_audit.json --count 10
+    python audit_log_generator.py --output sample_audit.json --count 10
     python audit_log_generator.py --action CHANGE --file kernel/settings.yaml --reason "测试"
 """
 
@@ -211,8 +211,7 @@ class AuditLogGenerator:
         "部署新版本"
     ]
     
-    def __init__(self, config_dir: Path):
-        self.config_dir = config_dir
+    def __init__(self):
         self._file_hashes: Dict[str, str] = {}
         
     def generate_entry(
@@ -448,12 +447,6 @@ Examples:
     )
     
     parser.add_argument(
-        "--config-dir",
-        type=Path,
-        default=Path(__file__).parent.parent.parent.parent,
-        help="Configuration directory path (default: ../)"
-    )
-    parser.add_argument(
         "--output",
         type=Path,
         default=Path("sample_audit_log.json"),
@@ -497,7 +490,7 @@ Examples:
     
     args = parser.parse_args()
     
-    generator = AuditLogGenerator(args.config_dir)
+    generator = AuditLogGenerator()
     
     if args.action or args.file:
         entry = generator.generate_entry(
