@@ -132,15 +132,19 @@ class SchemaDiffer:
       config-audit-log.schema.json  → (not in agentrt.yaml)
       sanitizer-rules.schema.json   → security (indirect)
       _metadata.schema.json         → (not in agentrt.yaml)
+
+    All paths anchor to the Manager repo root: ``configs/agentrt.yaml``
+    and ``schema/``. This holds in both a standalone Manager checkout
+    and an aggregate umbrella checkout, matching drift_detector.py.
     """
 
-    def __init__(self, agentrt_root: Optional[str] = None):
-        if agentrt_root:
-            self._root = Path(agentrt_root)
+    def __init__(self, manager_root: Optional[str] = None):
+        if manager_root:
+            self._root = Path(manager_root)
         else:
-            self._root = Path(__file__).parent.parent.parent.parent.parent
+            self._root = Path(__file__).parent.parent.parent
         self._yaml_path = self._root / "configs" / "agentrt.yaml"
-        self._schema_dir = self._root / "ecosystem" / "manager" / "schema"
+        self._schema_dir = self._root / "schema"
 
     def run(self) -> DiffReport:
         """Run full schema diff and return report."""
