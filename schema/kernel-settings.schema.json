@@ -309,38 +309,6 @@
               "description": "OOM watermark percentage threshold (from agentrt.yaml)",
               "examples": [80, 85, 90, 95]
             },
-            "arena_default_size_kb": {
-              "type": "integer",
-              "minimum": 4,
-              "maximum": 1024,
-              "default": 64,
-              "description": "Default arena allocator size in KB (from agentrt.yaml)",
-              "examples": [16, 32, 64, 128, 256]
-            },
-            "pool_thread_cache_max": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 10000,
-              "default": 256,
-              "description": "Max thread cache objects per pool (from agentrt.yaml)",
-              "examples": [64, 128, 256, 512]
-            },
-            "slab_min_objs": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 8,
-              "description": "Minimum objects per slab (from agentrt.yaml)",
-              "examples": [4, 8, 16, 32]
-            },
-            "mempool_reserved_mb": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 1024,
-              "default": 32,
-              "description": "Reserved mempool size in MB (from agentrt.yaml)",
-              "examples": [16, 32, 64, 128]
-            },
             "leak_scan_interval_sec": {
               "type": "integer",
               "minimum": 10,
