@@ -173,7 +173,6 @@ python audit_log_generator.py --count 5 --no-changes --output simple_audit.json
 
 | 参数 | 默认值 | 说明 |
 |------|--------|------|
-| `--config-dir` | `../` | 配置目录路径 |
 | `--output` | `sample_audit_log.json` | 输出文件路径 |
 | `--count` | 10 | 生成日志条数 |
 | `--action` | 随机 | 动作类型：LOAD/RELOAD/CHANGE/ROLLBACK/VALIDATE/EXPORT/IMPORT |
@@ -188,7 +187,7 @@ python audit_log_generator.py --count 5 --no-changes --output simple_audit.json
 ```python
 from audit_log_generator import AuditLogGenerator
 
-generator = AuditLogGenerator(config_dir)
+generator = AuditLogGenerator()
 
 # 生成单条日志
 entry = generator.generate_entry(
