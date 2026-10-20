@@ -3,7 +3,7 @@
     {
       "name": "DeepSeek",
       "mode": "api",
-      "api_format": "openai",
+      "api_format": "chat",
       "base_url": "https://api.deepseek.com",
       "model_id": "deepseek-flash",
       "api_key_env": "MODEL_1_API_KEY",
@@ -16,7 +16,7 @@
     {
       "name": "GLM",
       "mode": "api",
-      "api_format": "openai",
+      "api_format": "chat",
       "base_url": "https://open.bigmodel.cn/api/paas/v4",
       "model_id": "GLM-4.7-Flash",
       "api_key_env": "MODEL_2_API_KEY",
@@ -29,7 +29,7 @@
     {
       "name": "本地模型",
       "mode": "local",
-      "api_format": "openai",
+      "api_format": "local",
       "base_url": "http://localhost:11434/v1",
       "model_id": "llama-3-8b",
       "api_key_env": "",
