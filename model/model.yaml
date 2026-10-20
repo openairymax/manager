@@ -8,7 +8,7 @@
 # 运行环境 $AIRY_HOME/config/model.yaml，两侧内容保持一致。
 #
 # v3 表格形式：每行一个模型连接（数量不限，引擎上限 64）+ 双思考系统
-# 独立配置。字段统一抽象，不区分厂商：用户只需填 格式（OpenAI/Anthropic）、
+# 独立配置。字段统一抽象，不区分厂商：用户只需填 线格式（chat/messages/local）、
 # 地址、模型名，即可接入任意厂商 API 或本地模型。
 # 旧 providers/global/routing 长清单已移除。
 # =============================================================================
@@ -19,8 +19,10 @@
 # 必填字段：
 #   name          展示名称（自定义，如 "DeepSeek" / "本地模型"）
 #   mode          api（云端 API）| local（本地模型）
-#   api_format    openai（OpenAI Chat Completions）| anthropic（Anthropic Messages）
-#   base_url      服务根地址（完整 URL，不含 /chat/completions 或 /messages 后缀）
+#   api_format    chat（Chat Completions 线格式）| messages（Messages 线格式）
+#                 | local（本地运行时）
+#   base_url      服务根地址（适配器持有请求路径，此处不含 /chat/completions 或
+#                 /messages 后缀）
 #   model_id      模型 ID（实际调用时使用的模型名）
 #   api_key_env   secrets.env 中的变量名（可省略/留空）：
 #                 - 缺省/留空时自动按表格行号映射 MODEL_<行号>_API_KEY
@@ -34,7 +36,7 @@
 #   示例（追加为第 4 行时）：
 #     - name: Qwen
 #       mode: api
-#       api_format: openai
+#       api_format: chat
 #       base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
 #       model_id: qwen-max
 #     secrets.env 加一行：MODEL_4_API_KEY=sk-xxxx
@@ -45,12 +47,14 @@
 #   tool_rounds      工具调用轮数（默认 1000）
 #   vision           图片输入：true|false（默认 false）
 #   thinking         思考模式：auto（跟随模型默认）|on|off（默认 auto）
+#   extra_headers    端点附加请求头，形如 "anthropic-version: 2023-06-01"；
+#                    多条以 ';' 或换行分隔（Messages 线格式必需协议版本头）
 #   input_cost_per_1k   输入单价（美元/千 token，可选；缺失落默认价）
 #   output_cost_per_1k  输出单价（美元/千 token，可选；缺失落默认价）
 models:
   - name: DeepSeek
     mode: api
-    api_format: openai
+    api_format: chat
     base_url: https://api.deepseek.com
     model_id: deepseek-flash
     api_key_env: MODEL_1_API_KEY
@@ -64,7 +68,7 @@ models:
 
   - name: GLM
     mode: api
-    api_format: openai
+    api_format: chat
     base_url: https://open.bigmodel.cn/api/paas/v4
     model_id: GLM-4.7-Flash
     api_key_env: MODEL_2_API_KEY
@@ -78,7 +82,7 @@ models:
 
   - name: 本地模型
     mode: local
-    api_format: openai
+    api_format: local
     base_url: http://localhost:11434/v1
     model_id: llama-3-8b
     api_key_env: ""

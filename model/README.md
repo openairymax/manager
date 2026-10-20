@@ -26,7 +26,7 @@ YAML 格式的模型配置，包含详细注释，适合人工编辑。定义以
 
 | 配置域 | 说明 |
 |--------|------|
-| **`models`** | 模型连接表（数量不限，引擎上限 64）：`name` / `mode`（api\|local）/ `api_format`（openai\|anthropic）/ `base_url` / `model_id` / `api_key_env` / `context_window` / `max_output` / `tool_rounds` / `vision` / `thinking` / `input_cost_per_1k` / `output_cost_per_1k` |
+| **`models`** | 模型连接表（数量不限，引擎上限 64）：`name` / `mode`（api\|local）/ `api_format`（chat\|messages\|local）/ `base_url` / `model_id` / `api_key_env` / `context_window` / `max_output` / `tool_rounds` / `vision` / `thinking` / `extra_headers` / `input_cost_per_1k` / `output_cost_per_1k` |
 | **`default_model`** | 默认模型（须为 `models` 表中某一行的 `model_id`） |
 | **`think`** | 双思考系统（Thinkdual / GRAD 批判循环）：`enabled`、三个思考角色的模型分配（`think2_slow_model` / `think1_fast_model` / `think1_prof_model`）、`timeout_ms` |
 
