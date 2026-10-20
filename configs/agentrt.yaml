@@ -109,7 +109,7 @@ gateway:
   a2a:
     enabled: true
     default_timeout_ms: 60000
-  openai_compat:
+  llm_compat:
     enabled: true
 
 # ─── Hook 配置 ───
