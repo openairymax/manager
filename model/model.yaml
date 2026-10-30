@@ -1,5 +1,5 @@
 # =============================================================================
-# AgentRT 大语言模型配置文件（v3.0.0 | 最后更新: 2026-08-26）
+# AgentRT 大语言模型配置文件（v3.0.0 | 最后更新: 2026-10-30）
 # =============================================================================
 # Copyright (c) 2026 SPHARX. All Rights Reserved. "From data intelligence emerges."
 #
@@ -51,6 +51,15 @@
 #                    多条以 ';' 或换行分隔（Messages 线格式必需协议版本头）
 #   input_cost_per_1k   输入单价（美元/千 token，可选；缺失落默认价）
 #   output_cost_per_1k  输出单价（美元/千 token，可选；缺失落默认价）
+#   provision           managed（端点由 supervisor 托管的本地进程提供）|
+#                       external（端点由外部服务提供）；仅托管场景需声明
+#   artifact            托管工件路径（可选）。标准安装下工件位置由
+#                       airy-local 注册表与 config/managed.d 片段权威持有，
+#                       此处留空即可，避免两处 SSoT 漂移
+#   capabilities        上游能力位显式声明（seed|grammar|num_ctx|
+#                       response_format|cache_prompt|slot_id|enable_thinking|
+#                       thinking_budget）；整表替换派生值，未列位按 false 处理，
+#                       不声明即按端点类型派生
 models:
   - name: DeepSeek
     mode: api
@@ -80,12 +89,23 @@ models:
     input_cost_per_1k: 0.0        # 免费额度模型，显式 0 避免落默认价
     output_cost_per_1k: 0.0
 
+  # 自托管本地推理：端点由 supervisor 托管的 llama-server 提供（端口
+  # 11435 为自托管专用口，与 Ollama 的 11434 分离，互不抢占）。模型 pin
+  # 见 tools/scripts/ops/templates/llama-models.list，工件由
+  # `airy-local model install` 落位。
   - name: 本地模型
     mode: local
     api_format: local
-    base_url: http://localhost:11434/v1
-    model_id: llama-3-8b
+    base_url: http://127.0.0.1:11435/v1
+    model_id: qwen3-0.6b-q8_0
     api_key_env: ""
+    provision: managed
+    capabilities:
+      seed: true
+      grammar: true
+      response_format: true
+      cache_prompt: true
+      enable_thinking: true
     context_window: 128k
     max_output: 16k
     tool_rounds: 1000
