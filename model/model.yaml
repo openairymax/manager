@@ -117,6 +117,19 @@ models:
 # ── 默认模型（必填，须为上方 models 表中某一行的 model_id）───────────────
 default_model: deepseek-flash
 
+# ── 思考角色槽位（tc3，0.1.21 C-19 单一事实源）─────────────────────────────
+# 行为：槽位只引用上方 models 表中的 model_id，不再各写一份模型名。
+#   t2   慢思考：生成行动计划      （GRAD 模型 A）
+#   t1f  快思考：对计划终裁        （GRAD 模型 B）
+#   t1p  专业思考：专家校验        （GRAD 模型 C）
+# 空串 "" = 回退 default_model；引用表中不存在的 model_id 时启动自检拒绝
+# 该槽位并显式降级（日志 + issue 事件），不静默沿用。
+# 临时覆盖（env 优先级最高）：AIRY_MODEL_T2 / AIRY_MODEL_T1F / AIRY_MODEL_T1P。
+slots:
+  t2: ""
+  t1f: ""
+  t1p: ""
+
 # ── 性能模式（可选，缺省 full；env AIRY_PERF_MODE 覆盖）─────────────────
 # 设备级策略包络，用于在低算力端侧（纯 CPU / 小内存 / 端侧 SoC）上保障首字
 # 延迟与长时间运行稳定性，取值：
@@ -136,20 +149,16 @@ performance_mode: full
 #  - enabled: true  → 对话先经批判循环（GRAD）产出收敛的 DAG 行动计划，
 #    再交 LLM 按计划回答（慢思考组织逻辑、快/专业思考校验终裁）。
 #  - enabled: false → 关闭双思考，退化为单轮普通计划。
-#  - 三个思考角色模型：填上方 models 表中的 model_id；留空 "" = 默认模型
-#    （default_model），三个角色共用。
-#      think2_slow_model  慢思考（t2）生成行动计划        （GRAD 模型 A）
-#      think1_fast_model  快思考（t1-f）对计划终裁        （GRAD 模型 B）
-#      think1_prof_model  专业思考（t1-p）专家校验        （GRAD 模型 C）
+#  - 三个思考角色模型统一由上方 slots 段绑定（0.1.21 C-19），本段只保留
+#    开关与超时；旧 think2_slow_model / think1_fast_model / think1_prof_model
+#    键已废弃，仍可读但会打印 deprecated 告警，请改用 slots。
 #  - 临时覆盖（env 优先级最高）：
-#      AIRY_THINK_ENABLED / AIRY_THINK2_SLOW_MODEL /
-#      AIRY_THINK1_FAST_MODEL / AIRY_THINK1_PROF_MODEL / AIRY_THINK_TIMEOUT_MS
-#  - 优先级：env > 本段 > think_d -c JSON 配置 > 默认。
+#      AIRY_THINK_ENABLED / AIRY_MODEL_T2 / AIRY_MODEL_T1F / AIRY_MODEL_T1P /
+#      AIRY_THINK_TIMEOUT_MS；旧名 AIRY_THINK2_SLOW_MODEL /
+#      AIRY_THINK1_FAST_MODEL / AIRY_THINK1_PROF_MODEL 仍可读并告警。
+#  - 优先级：env > slots > 旧 think 键 > think_d -c JSON 配置 > 默认。
 think:
   enabled: true
-  think2_slow_model: ""
-  think1_fast_model: ""
-  think1_prof_model: ""
   timeout_ms: 120000
 
 # ─────────────────────────────────────────────────────────────────────────────
