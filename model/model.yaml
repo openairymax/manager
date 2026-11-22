@@ -44,7 +44,8 @@
 # 高级配置（可选，缺省用默认值）：
 #   context_window   上下文窗口：128k|256k|512k|1M|2M（默认 128k）
 #   max_output       最大输出 token：4k|16k|32k|128k|256k（默认 16k）
-#   tool_rounds      工具调用轮数（默认 1000）
+#   tool_rounds      工具调用轮数（默认 32，= 机制硬界；运行期再按
+#                    AIRY_AGENT_TOOL_ROUNDS 收紧，两条执行路径同一变量）
 #   vision           图片输入：true|false（默认 false）
 #   thinking         思考模式：auto（跟随模型默认）|on|off（默认 auto）
 #   extra_headers    端点附加请求头，形如 "anthropic-version: 2023-06-01"；
@@ -69,7 +70,7 @@ models:
     api_key_env: MODEL_1_API_KEY
     context_window: 128k
     max_output: 16k
-    tool_rounds: 1000
+    tool_rounds: 32
     vision: false
     thinking: auto
     input_cost_per_1k: 0.00015   # $0.15/M tokens（deepseek-flash 标准时段，未命中缓存）
@@ -83,7 +84,7 @@ models:
     api_key_env: MODEL_2_API_KEY
     context_window: 128k
     max_output: 16k
-    tool_rounds: 1000
+    tool_rounds: 32
     vision: false
     thinking: auto
     input_cost_per_1k: 0.0        # 免费额度模型，显式 0 避免落默认价
@@ -108,7 +109,7 @@ models:
       enable_thinking: true
     context_window: 128k
     max_output: 16k
-    tool_rounds: 1000
+    tool_rounds: 32
     vision: false
     thinking: auto
     input_cost_per_1k: 0.0       # 免费模型显式 0，不落默认价

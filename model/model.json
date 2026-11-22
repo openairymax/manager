@@ -9,7 +9,7 @@
       "api_key_env": "MODEL_1_API_KEY",
       "context_window": "128k",
       "max_output": "16k",
-      "tool_rounds": 1000,
+      "tool_rounds": 32,
       "vision": false,
       "thinking": "auto"
     },
@@ -22,7 +22,7 @@
       "api_key_env": "MODEL_2_API_KEY",
       "context_window": "128k",
       "max_output": "16k",
-      "tool_rounds": 1000,
+      "tool_rounds": 32,
       "vision": false,
       "thinking": "auto"
     },
@@ -43,7 +43,7 @@
       },
       "context_window": "128k",
       "max_output": "16k",
-      "tool_rounds": 1000,
+      "tool_rounds": 32,
       "vision": false,
       "thinking": "auto",
       "input_cost_per_1k": 0.0,
