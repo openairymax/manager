@@ -34,9 +34,11 @@ MODEL_YAML = _MANAGER_DIR / "model" / "model.yaml"
 MODEL_JSON = _MANAGER_DIR / "model" / "model.json"
 AGENTRT_YAML = _MANAGER_DIR / "configs" / "agentrt.yaml"
 SECRETS_TEMPLATE = _HUB_ROOT.parent / "tools" / "scripts" / "ops" / "templates" / "secrets.env.example"
-# T5 目标 llm.py：monorepo 为 <hub>/ecosystem/agents/...；独立组装为 <assembly>/agents/...
+# T5 目标：声明 KEY_FALLBACK_CHAIN 的模块（0.1.21 起 key 解析 SSoT 为 llm_cfg.py）
 ORCHESTRATION_LLM = next(
     (c for c in (
+        _HUB_ROOT / "ecosystem" / "agents" / "orchestration" / "core" / "llm_cfg.py",
+        _HUB_ROOT / "agents" / "orchestration" / "core" / "llm_cfg.py",
         _HUB_ROOT / "ecosystem" / "agents" / "orchestration" / "core" / "llm.py",
         _HUB_ROOT / "agents" / "orchestration" / "core" / "llm.py",
     ) if c.exists()),
@@ -190,12 +192,15 @@ class TestOrchestrationKeyFallbackCoversModel:
 
         compat_keys = used_keys & self.OPENAI_COMPAT_KEYS
 
-        # _resolve_api_key 内声明的 fallback 变量（顺序保持 OPENAI → DEEPSEEK → ANTHROPIC）
+        # KEY_FALLBACK_CHAIN 常量（顺序保持 OPENAI → DEEPSEEK → ANTHROPIC）
         m = re.search(
-            r'for var in \(([^)]*)\)', llm_text
+            r'KEY_FALLBACK_CHAIN[^=]*=\s*\(([^)]*)\)', llm_text
         )
-        assert m, "orchestration _resolve_api_key 未定义 fallback 链"
-        chain = {v.strip().strip('"') for v in m.group(1).split(",") if v.strip()}
+        assert m, "orchestration 未声明 KEY_FALLBACK_CHAIN（key fallback 链 SSoT）"
+        chain = {
+            v.strip().strip('"').strip("'")
+            for v in m.group(1).split(",") if v.strip()
+        }
 
         missing = compat_keys - chain
         assert not missing, \
@@ -204,4 +209,6 @@ class TestOrchestrationKeyFallbackCoversModel:
     def test_deepseek_in_fallback_chain(self):
         """默认提供商 DeepSeek 的 key 变量必须在 fallback 链中。"""
         llm_text = self._orchestration_llm().read_text(encoding="utf-8")
-        assert "DEEPSEEK_API_KEY" in llm_text
+        m = re.search(r'KEY_FALLBACK_CHAIN[^=]*=\s*\(([^)]*)\)', llm_text)
+        assert m, "orchestration 未声明 KEY_FALLBACK_CHAIN（key fallback 链 SSoT）"
+        assert "DEEPSEEK_API_KEY" in m.group(1)
