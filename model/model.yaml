@@ -44,6 +44,8 @@
 # 高级配置（可选，缺省用默认值）：
 #   context_window   上下文窗口：128k|256k|512k|1M|2M（默认 128k）
 #   max_output       最大输出 token：4k|16k|32k|128k|256k（默认 16k）
+#   temperature      采样温度（可选，默认 0.7；显式 0 = 确定性输出）
+#   top_p            核采样（可选；缺省不下发，保持厂商默认）
 #   tool_rounds      工具调用轮数（默认 32，= 机制硬界；运行期再按
 #                    AIRY_AGENT_TOOL_ROUNDS 收紧，两条执行路径同一变量）
 #   vision           图片输入：true|false（默认 false）
